@@ -30,9 +30,9 @@ This project aims to:
 
 ```
 /project-root
-  ├── /flutter_app         # Frontend app
-  ├── /ai_models           # ML model training & inference
-  ├── /backend             # REST APIs or cloud functions
+  ├──        # Frontend app
+  ├──        # ML model training & inference
+  ├──        # REST APIs or cloud functions
   └── README.md
 ```
 
