@@ -1,4 +1,4 @@
-# BosonStack
+# Education Manager
 
 A cross-platform mobile application built with **Flutter**, integrating **AI-powered features** and a **robust backend** to deliver smart, real-time experiences. This repository serves as the main hub for frontend, AI, and backend collaboration.
 
