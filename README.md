@@ -1,6 +1,6 @@
 # Education Manager
 
-A cross-platform mobile application built with **Flutter**, integrating **AI-powered features** and a **robust backend** to deliver smart, real-time experiences. This repository serves as the main hub for frontend, AI, and backend collaboration.
+A cross-platform mobile application built with **Flutter**, integrating **AI-powered features** and a **robust backend** to deliver smart, real-time experiences. This repository serves as the main hub for frontend, AI, and backend collaboration. The app lets students scan any printed or handwritten material, instantly extracts and organizes the content, then turns it into a personalized, interactive tutor session—all backed by a Node.js service that stores, syncs, and analyzes your learning.
 
 ---
 
@@ -18,9 +18,9 @@ This project aims to:
 | Layer      | Technology                    |
 |------------|-------------------------------|
 | Frontend   | Flutter, Dart                 |
-| AI/ML      | Python, TensorFlow/PyTorch, ONNX |
-| Backend    | Node.js / Django / Firebase   |
-| Database   | Firestore / PostgreSQL        |
+| AI/ML      | Python, TensorFlow/PyTorch    |
+| Backend    | Node.js                       |
+| Database   | Firestore / SurrealDB         |
 | Realtime   | Firebase / WebSockets         |
 | DevOps     | GitHub Actions, Docker (future) |
 
@@ -97,7 +97,7 @@ This project aims to:
 - Real-time data sync
 - Cloud-based model inference
 - Notifications
-- Admin dashboard (web)
+- Admin dashboard
 
 ---
 
