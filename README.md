@@ -36,32 +36,6 @@ This project aims to:
   └── README.md
 ```
 
----
-
-## 🧑‍💻 Getting Started
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/your-org/your-project.git
-   cd your-project
-   ```
-
-2. **Frontend Setup (Flutter)**
-   ```bash
-   cd flutter_app
-   flutter pub get
-   flutter run
-   ```
-
-3. **AI Model Setup**
-   - Use Python environment (details coming soon).
-   - Pre-trained models will be provided or linked.
-
-4. **Backend Setup**
-   - To be initialized (Django/Firebase/API framework decision pending).
-
----
-
 ## 🤝 Contributing
 
 - Use feature branches: `feature/feature-name`
