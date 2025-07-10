@@ -1,4 +1,4 @@
-# EduScan Pro 📚✨  
+# EduScan Pro 📚 
 **Intelligent Study Scanner, Organizer & AI Tutor**  
 A cross-platform AI-powered Flutter app designed to help students scan, structure, and learn from any printed or handwritten material—backed by a Node.js backend with real-time collaboration, cloud inference, and personalized study analytics.
 
