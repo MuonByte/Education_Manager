@@ -1,4 +1,4 @@
-# EduScan Pro 📚 
+# EduScan Pro 📚✨  
 **Intelligent Study Scanner, Organizer & AI Tutor**  
 A cross-platform AI-powered Flutter app designed to help students scan, structure, and learn from any printed or handwritten material—backed by a Node.js backend with real-time collaboration, cloud inference, and personalized study analytics.
 
@@ -57,12 +57,39 @@ A --> G[AI Tutor UI]
 
 ## 🔧 Tech Stack
 
+
+### 🎯 Flutter App Features
+
+- **Camera-based OCR Scanner** with real-time cropping and enhancement
+- **Offline Flashcard Mode** powered by on-device summarizer and drill logic
+- **Interactive Tutor Chat UI** for AI Q&A based on user-scanned content
+- **Document Organizer** to categorize scans by subject and topic
+- **Progress Dashboard** to visualize mastery and flashcard accuracy
+- **Dark & Light Theme Support** with adaptive UI components
+- **Real-time Group Study UI** with collaborative annotation and quizzing
+- **State Management** using Bloc or Riverpod (user configurable)
+
+
 ### Frontend (Flutter)
 - Flutter 3+ (Dart)
 - Tesseract OCR / Google ML Kit
 - Riverpod / Bloc (for state management)
 - Flutter WebSocket client
 - Hive / SharedPreferences (local storage)
+
+
+### 🔐 Advanced Backend Security Features
+
+- **Short-lived JWTs** with refresh token rotation and device binding
+- **End-to-End Encryption (E2EE)** for sensitive documents and scans
+- **Encrypted WebSocket Channels** for real-time collaboration using Socket.IO
+- **Spaced Repetition Analytics** isolated per-user with row-level permissions
+- **Tamper Detection System** using SHA256 hashes + device fingerprinting
+- **Rate-limited AI Endpoints** with dynamic per-user thresholds
+- **Serverless Model Execution Sandboxes** (Docker or Cloud Functions) to isolate AI workloads
+- **Signed Upload URLs** with HMAC time-based validation for secure document ingestion
+- **GraphQL Role-based Access Layer** that protects user insights and analytics
+
 
 ### Backend (Node.js)
 - Express.js + Socket.IO
@@ -116,7 +143,6 @@ A --> G[AI Tutor UI]
 - Node.js 18+
 - MongoDB or PostgreSQL instance
 - Firebase or AWS/GCP account (for cloud functions)
-- [SurrealDB optional if used instead of SQL/NoSQL]
 
 ---
 
