@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 import 'package:client/features/auth/views/pages/login_page.dart';
-=======
->>>>>>> 662dd4f63f199a0b6a5ba308ae1a46240b1955be
 import 'package:client/features/auth/views/pages/register.dart';
+
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -30,11 +28,7 @@ class MainApp extends StatelessWidget {
       },
       home: Scaffold(
         body: Center(
-<<<<<<< HEAD
           child: LoginPage(),
-=======
-          child: Register(),
->>>>>>> 662dd4f63f199a0b6a5ba308ae1a46240b1955be
         ),
       ),
     );
