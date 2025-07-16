@@ -1,3 +1,4 @@
+import 'package:client/features/auth/views/pages/login_page.dart';
 import 'package:client/features/auth/views/pages/register.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -26,7 +27,7 @@ class MainApp extends StatelessWidget {
       },
       home: Scaffold(
         body: Center(
-          child: Register(),
+          child: LoginPage(),
         ),
       ),
     );

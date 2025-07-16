@@ -11,7 +11,7 @@ class CustomBackButton extends StatelessWidget {
     return GestureDetector(
       child: PhysicalModel(
         color: Pallete.WhiteColor,
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withOpacity(0.4),
         elevation: 6,
         borderRadius: BorderRadius.circular(18),
         child: InkWell(

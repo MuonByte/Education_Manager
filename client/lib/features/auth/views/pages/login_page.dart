@@ -1,6 +1,6 @@
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/core/utils/responsiveplatform.dart';
-import 'package:client/features/auth/views/pages/login_page.dart';
+import 'package:client/features/auth/views/pages/register.dart';
 import 'package:client/features/auth/views/widgets/auth_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
@@ -11,15 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterState extends State<Register> {
-  final nameController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -34,7 +34,6 @@ class _RegisterState extends State<Register> {
 
   @override
   void dispose(){
-    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -63,7 +62,7 @@ class _RegisterState extends State<Register> {
                   SizedBox(height: spacing * 0.07),
           
                   const Text(
-                    'Create your\nAccount',
+                    'Login your\nAccount',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
@@ -73,14 +72,6 @@ class _RegisterState extends State<Register> {
                   ),
                   
                   SizedBox(height: spacing * 0.04),
-          
-                  CustomTextField(
-                    controller: nameController, 
-                    hintText: 'Name',
-                    prefixIcon: Icons.person_2_outlined,
-                  ),
-          
-                  SizedBox(height: spacing * 0.01),
           
                   CustomTextField(
                     controller: emailController, 
@@ -106,7 +97,7 @@ class _RegisterState extends State<Register> {
                   SizedBox(height: spacing * 0.025),
           
                   AuthButton(
-                    buttonText: 'Register',
+                    buttonText: 'Login',
                     onPressed:() {
                       Navigator.push(
                         context,
@@ -121,18 +112,18 @@ class _RegisterState extends State<Register> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Already Have An Account?',
+                        'Dont Have An Account?',
                         style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
+                            MaterialPageRoute(builder: (context) => Register()),
                           );
                         },
                         child: const Text(
-                          ' Sign In',
+                          ' Sign Up',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
