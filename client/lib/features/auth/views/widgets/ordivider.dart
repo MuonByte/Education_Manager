@@ -5,8 +5,13 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
+=======
+    return Padding(
+      padding: const EdgeInsets.all(10),
+>>>>>>> 662dd4f63f199a0b6a5ba308ae1a46240b1955be
       child: Row(
         children: [
           const Expanded(
