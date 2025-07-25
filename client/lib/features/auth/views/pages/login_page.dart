@@ -1,14 +1,13 @@
-import 'package:client/core/theme/pallete.dart';
-import 'package:client/core/utils/responsiveplatform.dart';
-import 'package:client/features/auth/views/pages/register.dart';
-import 'package:client/features/auth/views/widgets/auth_button.dart';
+//import 'package:client/core/utils/responsiveplatform.dart';
+import 'package:client/features/auth/views/pages/reset_password_page.dart';
+import 'package:client/features/auth/views/pages/register_page.dart';
+import 'package:client/common/widgets/auth_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
-import 'package:client/features/auth/views/widgets/social_button.dart';
+import 'package:client/features/auth/views/widgets/social_buttons.dart';
 
 import 'package:flutter/material.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -42,8 +41,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
   
+  //final borderspace = MediaQuery.of(context).size.height;
   final spacing = MediaQuery.of(context).size.height;
-  String backgroundAsset = responsiveplatform(context);
+  final double iconspace = 20;
+  //String backgroundAsset = responsiveplatform(context);
 
     return Form(
       key: formKey,
@@ -98,10 +99,11 @@ class _LoginPageState extends State<LoginPage> {
           
                   AuthButton(
                     buttonText: 'Login',
+                    backgroundColor: Colors.black,
                     onPressed:() {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Placeholder()),
+                        MaterialPageRoute(builder: (context) => ResetPasswordPage()),
                       );
                     }
                   ),
@@ -149,24 +151,31 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: spacing * 0.02),
           
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: SocialButton(
-                          backgroundColor: Colors.red.shade100, 
-                          mainText: 'GOOGLE', 
-                          textColor: Colors.red
-                        ),
+      
+                      SocialButtons(
+                        gradColor1: Colors.blueAccent, 
+                        gradColor2: Colors.cyanAccent,
+                        mainColor: Colors.blue, 
+                        mainIcon: Icons.facebook_sharp),
+
+                      SizedBox(width: iconspace,),
+      
+                      SocialButtons(
+                        mainIcon: Icons.email,
+                        gradColor1: Colors.red,
+                        gradColor2: const Color.fromARGB(255, 255, 171, 171),
+                        mainColor: Colors.red,
                       ),
-                      
-                      SizedBox(width: 16),
-                      
-                      Expanded(
-                        child: SocialButton(
-                          backgroundColor: Colors.blue.shade100, 
-                          mainText: 'FACEBOOK', 
-                          textColor: Colors.blue
-                        ),
+      
+                      SizedBox(width: iconspace,),
+
+                      SocialButtons(
+                        mainIcon: Icons.phone_android,
+                        gradColor1: const Color.fromARGB(255, 184, 184, 184),
+                        gradColor2: const Color.fromARGB(255, 112, 112, 112),
+                        mainColor: const Color.fromARGB(255, 184, 184, 184),
                       ),
                     ],
                   ),

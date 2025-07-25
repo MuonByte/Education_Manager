@@ -7,9 +7,17 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  build_runner: ^2.6.0
+  dartz: ^0.10.1
+  dio: ^5.8.0+1
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^8.0.3
+  json_serializable: ^6.10.0
+  logger: ^2.6.1
   responsive_framework: ^1.5.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

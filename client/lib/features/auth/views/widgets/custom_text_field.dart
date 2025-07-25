@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final IconData prefixIcon;
   final Widget? suffixIconWidget;
   final bool obscureText;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextField({
     super.key,
@@ -14,13 +15,15 @@ class CustomTextField extends StatelessWidget {
     required this.prefixIcon,
     this.suffixIconWidget,
     this.obscureText = false,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       obscureText: obscureText,
+      validator: validator,
       style: const TextStyle(
         fontFamily: 'Poppins',
         fontWeight: FontWeight.w600,
