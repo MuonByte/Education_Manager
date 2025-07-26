@@ -1,6 +1,9 @@
+import 'package:client/features/auth/data/model/forget_password_request.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
+import 'package:client/features/auth/data/model/reset_password_requset.dart';
 import 'package:client/features/auth/data/model/user_model.dart';
+import 'package:client/features/auth/data/model/verify_otp_request.dart';
 import 'package:client/features/auth/data/source/auth_api_service.dart';
 import 'package:client/features/auth/data/source/auth_local_service.dart';
 import 'package:client/features/auth/domain/repository/auth_repo.dart';
@@ -69,5 +72,31 @@ class AuthRepositoryImplementation extends AuthRepository{
       }
     );
   }
+  
+  @override
+  Future<Either> forgetPassword(ForgetPasswordRequestParameters forgetReq) async {
+    final result = await sl<AuthApiService>().forgetPassword(forgetReq);
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(data),
+    );
+  }
 
+  @override
+  Future<Either> resetPassword(ResetPasswordRequestParameters param) async {
+    final result = await sl<AuthApiService>().resetPassword(param);
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(data),
+    );
+  }
+
+  @override
+  Future<Either> verifyOtp(VerifyOtpRequest param) async {
+    final result = await sl<AuthApiService>().verifyOtp(param);
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(data),
+    );
+  }
 }

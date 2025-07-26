@@ -95,41 +95,15 @@ class _RegisterState extends State<Register> {
 
                       SizedBox(height: spacing * 0.04),
 
-                      CustomTextField(
-                        controller: _nameController,
-                        hintText: 'Name',
-                        prefixIcon: Icons.person_2_outlined,
-                        validator: (value) =>
-                            Validators.validateUsername(value),
-                      ),
+                      _nameField(),
 
                       SizedBox(height: spacing * 0.01),
 
-                      CustomTextField(
-                        controller: _emailController,
-                        hintText: 'Email',
-                        prefixIcon: Icons.email_outlined,
-                        validator: (value) => Validators.validateEmail(value),
-                      ),
+                      _emailField(),
 
                       SizedBox(height: spacing * 0.01),
 
-                      CustomTextField(
-                        controller: _passwordController,
-                        hintText: 'Password',
-                        prefixIcon: Icons.lock_outline_rounded,
-                        obscureText: _obscurePassword,
-                        suffixIconWidget: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                          ),
-                          onPressed: _togglePasswordVisibility,
-                        ),
-                        validator: (value) =>
-                            Validators.validatePassword(value),
-                      ),
+                      _passwordField(),
 
                       SizedBox(height: spacing * 0.025),
 
@@ -137,35 +111,7 @@ class _RegisterState extends State<Register> {
 
                       SizedBox(height: spacing * 0.02),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Already Have An Account?',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              ' Sign In',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _changeMethod(context),
 
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.01,
@@ -189,46 +135,7 @@ class _RegisterState extends State<Register> {
 
                       SizedBox(height: spacing * 0.02),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SocialButtons(
-                            gradColor1: Colors.blueAccent,
-                            gradColor2: Colors.cyanAccent,
-                            mainColor: Colors.blue,
-                            mainIcon: Icons.facebook_sharp,
-                          ),
-
-                          SizedBox(width: iconspace),
-
-                          SocialButtons(
-                            mainIcon: Icons.email,
-                            gradColor1: Colors.red,
-                            gradColor2: const Color.fromARGB(
-                              255,
-                              255,
-                              171,
-                              171,
-                            ),
-                            mainColor: Colors.red,
-                          ),
-
-                          SizedBox(width: iconspace),
-
-                          SocialButtons(
-                            mainIcon: Icons.apple,
-                            gradColor1: Colors.white,
-                            gradColor2: const Color.fromARGB(
-                              255,
-                              112,
-                              112,
-                              112,
-                            ),
-                            mainColor: Colors.white,
-                          ),
-                        
-                        ],
-                      ),
+                      _otherRegister(iconspace),
                     ],
                   ),
                 ),
@@ -237,6 +144,119 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ),
+    );
+  }
+
+  CustomTextField _nameField() {
+    return CustomTextField(
+      controller: _nameController,
+      hintText: 'Name',
+      prefixIcon: Icons.person_2_outlined,
+      validator: (value) =>
+          Validators.validateUsername(value),
+    );
+  }
+
+  CustomTextField _emailField() {
+    return CustomTextField(
+      controller: _emailController,
+      hintText: 'Email',
+      prefixIcon: Icons.email_outlined,
+      validator: (value) => Validators.validateEmail(value),
+    );
+  }
+
+  CustomTextField _passwordField() {
+    return CustomTextField(
+      controller: _passwordController,
+      hintText: 'Password',
+      prefixIcon: Icons.lock_outline_rounded,
+      obscureText: _obscurePassword,
+      suffixIconWidget: IconButton(
+        icon: Icon(
+          _obscurePassword
+              ? Icons.visibility_off_outlined
+              : Icons.visibility_outlined,
+        ),
+        onPressed: _togglePasswordVisibility,
+      ),
+      validator: (value) =>
+          Validators.validatePassword(value),
+    );
+  }
+
+  Row _changeMethod(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Already Have An Account?',
+          style: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ),
+            );
+          },
+          child: const Text(
+            ' Sign In',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _otherRegister(double iconspace) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SocialButtons(
+          gradColor1: Colors.blueAccent,
+          gradColor2: Colors.cyanAccent,
+          mainColor: Colors.blue,
+          mainIcon: Icons.facebook_sharp,
+        ),
+
+        SizedBox(width: iconspace),
+
+        SocialButtons(
+          mainIcon: Icons.email,
+          gradColor1: Colors.red,
+          gradColor2: const Color.fromARGB(
+            255,
+            255,
+            171,
+            171,
+          ),
+          mainColor: Colors.red,
+        ),
+
+        SizedBox(width: iconspace),
+
+        SocialButtons(
+          mainIcon: Icons.apple,
+          gradColor1: Colors.white,
+          gradColor2: const Color.fromARGB(
+            255,
+            112,
+            112,
+            112,
+          ),
+          mainColor: Colors.white,
+        ),
+      
+      ],
     );
   }
 

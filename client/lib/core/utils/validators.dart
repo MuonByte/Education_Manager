@@ -39,4 +39,23 @@ class Validators {
     }
     return null;
   }
+
+  static String? validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+
+    final numericRegex = RegExp(r'^[0-9]+$');
+
+    if (!numericRegex.hasMatch(value)) {
+      return 'Only numbers are allowed';
+    }
+
+    if (value.length < 8) {
+      return 'Phone number is too short';
+    }
+
+    return null; // valid
+  }
+
 }

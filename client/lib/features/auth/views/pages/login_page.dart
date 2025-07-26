@@ -2,7 +2,8 @@ import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/domain/usecases/login_usecase.dart';
-import 'package:client/features/auth/views/pages/reset_password_page.dart';
+import 'package:client/features/auth/views/pages/forgetpasspages/forget_password_page.dart';
+import 'package:client/features/auth/views/pages/forgetpasspages/reset_password_page.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/common/widgets/auth_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
@@ -98,42 +99,18 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: spacing * 0.01),
             
                       _passwordField(),
+
+                      SizedBox(height: spacing * 0.015),
+
+                      _forgetPassword(context),
             
-                      SizedBox(height: spacing * 0.025),
+                      SizedBox(height: spacing * 0.015),
             
                       _loginButton(context),
             
                       SizedBox(height: spacing * 0.02),
             
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Dont Have An Account?',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Register(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              ' Sign Up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _changeMethods(context),
             
                       SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             
@@ -162,6 +139,66 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _forgetPassword(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [ 
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ForgetPasswordPage(),
+                ),
+              );
+            },
+            child: const Text(
+              'Forget Password',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+
+  Widget _changeMethods(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Dont Have An Account?',
+          style: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Register(),
+              ),
+            );
+          },
+          child: const Text(
+            ' Sign Up',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
