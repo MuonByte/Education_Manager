@@ -8,7 +8,7 @@ import 'package:dartz/dartz.dart';
 class LoginUsecase implements Usecase<Either, LoginRequestParameters>{
 
   @override
-  Future<Either> call({LoginRequestParameters ? param}) async {
-    return sl<AuthRepository>().login(param!);
+  Future<Either> call({required LoginRequestParameters param}) async {
+    return sl<AuthRepository>().login(param);
   }
 }

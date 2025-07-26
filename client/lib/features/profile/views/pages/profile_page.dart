@@ -16,6 +16,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => UserDisplayCubit()..displayUser()),
@@ -34,7 +35,9 @@ class ProfilePage extends StatelessWidget {
             child: BlocBuilder<UserDisplayCubit, UserDisplayState>(
               builder: (context, state) {
                 if (state is UserLoading) {
-                  return const CircularProgressIndicator();
+                  return Image.asset(
+                    'assets/gifs/Nothing.gif'
+                  );
                 }
                 if (state is UserLoaded) {
                   return Center(
@@ -63,14 +66,20 @@ class ProfilePage extends StatelessWidget {
   Widget _username(UserEntity user) {
     return Text(
       user.username,
-      style: const TextStyle(fontFamily: 'Poppins', fontSize: 12),
+      style: const TextStyle(
+        fontFamily: 'Poppins', 
+        fontSize: 12
+      ),
     );
   }
 
   Widget _email(UserEntity user) {
     return Text(
       user.email,
-      style: const TextStyle(fontFamily: 'Poppins', fontSize: 12),
+      style: const TextStyle(
+        fontFamily: 'Poppins', 
+        fontSize: 12
+      ),
     );
   }
 

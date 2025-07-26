@@ -25,7 +25,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> signup(SignupRequestParameters signupReq) async {
     try {
       var response = await sl<DioClient>().post(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.registerURL,
         data: signupReq.toMap(),
       );
       return Right(response);
@@ -43,7 +43,7 @@ class AuthApiServiceImplementation extends AuthApiService {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var token = sharedPreferences.getString('token');
       var response = await sl<DioClient>().get(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.usersURL,
         options: Options(
           headers: {
             'Authorization' : 'Bearer $token'
@@ -62,7 +62,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> login(LoginRequestParameters loginReq) async {
     try {
       var response = await sl<DioClient>().post(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.loginURL,
         data: loginReq.toMap(),
       );
       return Right(response);
@@ -77,7 +77,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> forgetPassword(ForgetPasswordRequestParameters forgetReq) async {
     try {
       var response = await sl<DioClient>().post(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.loginURL,
         data: forgetReq.toMap(),
       );
       return Right(response);
@@ -92,7 +92,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> resetPassword(ResetPasswordRequestParameters param) async {
     try {
       final response = await sl<DioClient>().post(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.loginURL,
         data: param.toMap(),
       );
       return Right(response);
@@ -106,7 +106,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> verifyOtp(VerifyOtpRequest param) async {
     try {
       final response = await sl<DioClient>().post(
-        'https://webhook.site/4e8cb70b-7535-4ff5-9d5e-9a89f1afa4df',
+        ApiUrls.testURL,
         data: param.toMap(),
       );
       return Right(response);

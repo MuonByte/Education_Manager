@@ -222,22 +222,10 @@ class _RegisterState extends State<Register> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SocialButtons(
-          gradColor1: Colors.blueAccent,
-          gradColor2: Colors.cyanAccent,
-          mainColor: Colors.blue,
-          mainIcon: Icons.facebook_sharp,
-        ),
-
-        SizedBox(width: iconspace),
-
-        SocialButtons(
           mainIcon: Icons.email,
           gradColor1: Colors.red,
           gradColor2: const Color.fromARGB(
-            255,
-            255,
-            171,
-            171,
+            255,255,171,171,
           ),
           mainColor: Colors.red,
         ),
@@ -248,10 +236,7 @@ class _RegisterState extends State<Register> {
           mainIcon: Icons.apple,
           gradColor1: Colors.white,
           gradColor2: const Color.fromARGB(
-            255,
-            112,
-            112,
-            112,
+            255,112,112,112,
           ),
           mainColor: Colors.white,
         ),

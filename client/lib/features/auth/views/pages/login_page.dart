@@ -3,7 +3,6 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/domain/usecases/login_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/forget_password_page.dart';
-import 'package:client/features/auth/views/pages/forgetpasspages/reset_password_page.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/common/widgets/auth_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
@@ -244,8 +243,8 @@ class _LoginPageState extends State<LoginPage> {
             context.read<ButtonStateCubit>().excute(
               usecase: sl<LoginUsecase>(),
               params: LoginRequestParameters(
-                email: emailController.toString(), 
-                password: passwordController.toString()
+                email: emailController.text, 
+                password: passwordController.text
               )
             );
           },
