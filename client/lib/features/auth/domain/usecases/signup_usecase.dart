@@ -11,6 +11,4 @@ class SignupUsecases implements Usecase<Either, SignupRequestParameters>{
   Future<Either> call({required SignupRequestParameters param}) async {
     return sl<AuthRepository>().signup(param);
   }
-
-//edit
 }

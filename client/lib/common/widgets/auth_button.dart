@@ -41,11 +41,7 @@ class AuthButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
       ),
-      child: Image.asset(
-      'assets/gifs/Nothing.gif',
-      height: 30,
-      width: 30,
-    ),
+      child: CircularProgressIndicator()
     );
   }
 

@@ -1,18 +1,15 @@
-class SignupRequestParameters {
+class LoginRequestParameters {
   
   final String email;
   final String password;
-  final String username;
 
-  SignupRequestParameters({
+  LoginRequestParameters({
     required this.email, 
     required this.password, 
-    required this.username,
   });
 
   Map<String, dynamic> toMap() {
     return<String, dynamic>{
-    'name': username,
     'email': email,
     'password': password,
     };

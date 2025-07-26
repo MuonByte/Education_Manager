@@ -1,3 +1,4 @@
+import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/data/model/user_model.dart';
 import 'package:client/features/auth/data/source/auth_api_service.dart';
@@ -51,6 +52,22 @@ class AuthRepositoryImplementation extends AuthRepository{
   @override
   Future logout() async {
     await sl<AuthLocalService>().logout();
+  }
+
+  @override
+  Future<Either> login(LoginRequestParameters loginReq) async {
+    Either result = await sl<AuthApiService>().login(loginReq);
+    return result.fold(
+      (error) {
+        return Left(error);
+      }, 
+      (data) async {
+        Response response = data;
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString('token', response.data['token']);
+        return Right(response);
+      }
+    );
   }
 
 }

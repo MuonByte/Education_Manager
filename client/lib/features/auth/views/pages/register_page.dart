@@ -2,13 +2,14 @@ import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
-import 'package:client/features/auth/domain/usecases/signup_usecases.dart';
+import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:client/features/auth/views/pages/login_page.dart';
 import 'package:client/common/widgets/auth_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
+import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
 
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class _RegisterState extends State<Register> {
               if(state is ButtonSuccessState){
                 Navigator.pushReplacement(
                   context, 
-                  MaterialPageRoute(builder: (context) => const Placeholder())
+                  MaterialPageRoute(builder: (context) => ProfilePage())
                 );
               }
               if(state is ButtonFailureState){
@@ -225,6 +226,7 @@ class _RegisterState extends State<Register> {
                             ),
                             mainColor: Colors.white,
                           ),
+                        
                         ],
                       ),
                     ],
