@@ -1,7 +1,7 @@
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
-import 'package:client/features/profile/views/pages/profile_page.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/services/service_locator.dart';
 
 import 'package:flutter/material.dart';
@@ -29,6 +29,7 @@ class MainApp extends StatelessWidget {
               Breakpoint(start: 451, end: 800, name: TABLET),
               Breakpoint(start: 801, end: 1920, name: DESKTOP),
               Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+              
             ],
             child: child!,
           );
@@ -36,14 +37,24 @@ class MainApp extends StatelessWidget {
         home: BlocBuilder<AuthStateCubit,AuthState>(
           builder: (context, state) {
             if(state is Authenticated) {
-              return ProfilePage();
+              return HomePage();
             }
             if(state is Unauthenticated) {
               return Register();
             }
             return Placeholder();
           },
-        )
+        ),
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) {
+              return ResponsiveScaledBox(
+                width: null, 
+                child: HomePage(),
+              );
+            }
+          );
+        },
       ),
     );
   }

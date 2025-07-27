@@ -1,6 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/forget_password_request.dart';
@@ -100,7 +100,7 @@ class _PhoneResetPageState extends State<PhoneResetPage> {
 Widget _resetPassButton(BuildContext context, _formKey, TextEditingController _phoneNumberController) {
   return Builder(
     builder: (context) {
-      return AuthButton(
+      return CustomButton(
         buttonText: 'Next',
         onPressed: () {
           if (_formKey.currentState!.validate()) {

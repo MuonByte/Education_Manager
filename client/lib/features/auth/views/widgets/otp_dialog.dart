@@ -1,6 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/helper/helper_functions.dart';
 import 'package:client/features/auth/data/model/forget_password_request.dart';
 import 'package:client/features/auth/data/model/verify_otp_request.dart';
@@ -33,8 +33,12 @@ class _OtpDialogState extends State<OtpDialog> {
   void dispose() {
     _verifyCubit.close();
     _resendCubit.close();
-    for (var controller in _controllers) controller.dispose();
-    for (var node in _focusNodes) node.dispose();
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
@@ -133,7 +137,7 @@ class _OtpDialogState extends State<OtpDialog> {
                     );
                   }
                 },
-                child: AuthButton(
+                child: CustomButton(
                   buttonText: 'Verify',
                   onPressed: () {
                     if (_enteredOtp.length == 6) {
@@ -171,7 +175,7 @@ class _OtpDialogState extends State<OtpDialog> {
                     );
                   }
                 },
-                child: AuthButton(
+                child: CustomButton(
                   buttonText: 'Send Again',
                   onPressed: () {
                     _resendCubit.excute(

@@ -4,12 +4,12 @@ import 'package:client/common/widgets/loading_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final Color backgroundColor; 
 
-  const AuthButton({
+  const CustomButton({
     super.key, 
     required this.buttonText, 
     required this.onPressed,

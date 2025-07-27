@@ -4,7 +4,7 @@ import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:client/features/auth/views/pages/login_page.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
@@ -248,7 +248,7 @@ class _RegisterState extends State<Register> {
   Widget _registerButton(BuildContext context) {
     return Builder(
       builder: (context) {
-        return AuthButton(
+        return CustomButton(
           buttonText: 'Register',
           backgroundColor: Colors.black,
           onPressed: () {

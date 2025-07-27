@@ -4,11 +4,12 @@ import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/domain/usecases/login_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/forget_password_page.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
 
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               if(state is ButtonSuccessState){
                 Navigator.pushReplacement(
                   context, 
-                  MaterialPageRoute(builder: (context) => ProfilePage())
+                  MaterialPageRoute(builder: (context) => HomePage())
                 );
               }
               if(state is ButtonFailureState){
@@ -236,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginButton(BuildContext context) {
     return Builder(
       builder: (context) {
-        return AuthButton(
+        return CustomButton(
           buttonText: 'Login',
           backgroundColor: Colors.black,
           onPressed: () {

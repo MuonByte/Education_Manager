@@ -1,5 +1,5 @@
 import 'package:client/common/bloc/button/button_state.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/features/auth/domain/entities/user_entity.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/features/auth/domain/usecases/logout_usecase.dart';
@@ -84,7 +84,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _logout(BuildContext context) {
-    return AuthButton(
+    return CustomButton(
       buttonText: 'Logout',
       backgroundColor: Colors.black38,
       onPressed: () {

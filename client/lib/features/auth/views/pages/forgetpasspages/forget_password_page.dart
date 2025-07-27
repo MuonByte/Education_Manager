@@ -1,6 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/email_reset_page.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/phone_reset_page.dart';
@@ -118,7 +118,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 }
 
 Widget _nextButton(BuildContext context, String selectedMethod) {
-  return AuthButton(
+  return CustomButton(
     buttonText: 'Next',
     onPressed: () {
       if (selectedMethod.isEmpty) {

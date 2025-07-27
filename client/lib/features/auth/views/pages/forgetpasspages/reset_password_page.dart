@@ -1,6 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
-import 'package:client/common/widgets/auth_button.dart';
+import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/features/auth/data/model/reset_password_requset.dart';
 import 'package:client/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
@@ -110,7 +110,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget _resetbutton(BuildContext context) {
     return Builder(
       builder: (context) {
-        return AuthButton(
+        return CustomButton(
           buttonText: 'Reset Password',
           backgroundColor: Colors.black,
           onPressed: () {
