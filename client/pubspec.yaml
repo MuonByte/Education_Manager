@@ -8,12 +8,16 @@ environment:
 
 dependencies:
   build_runner: ^2.6.0
+  camera: ^0.11.2
   dartz: ^0.10.1
   dio: ^5.8.0+1
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_screenutil: ^5.9.3
+  gal: ^2.3.2
   get_it: ^8.0.3
+  image_picker: ^1.1.2
   json_serializable: ^6.10.0
   logger: ^2.6.1
   responsive_framework: ^1.5.1

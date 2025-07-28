@@ -233,7 +233,7 @@ class _RegisterState extends State<Register> {
         SizedBox(width: iconspace),
 
         SocialButtons(
-          mainIcon: Icons.apple,
+          mainIcon: Icons.phone_android_rounded,
           gradColor1: Colors.white,
           gradColor2: const Color.fromARGB(
             255,112,112,112,

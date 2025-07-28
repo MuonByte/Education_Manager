@@ -161,7 +161,6 @@ class _OtpDialogState extends State<OtpDialog> {
 
               SizedBox(height: 12),
 
-              /// SEND AGAIN BUTTON
               BlocListener<ButtonStateCubit, ButtonState>(
                 bloc: _resendCubit,
                 listener: (context, state) {

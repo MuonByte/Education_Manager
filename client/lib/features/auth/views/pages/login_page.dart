@@ -207,15 +207,6 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SocialButtons(
-          gradColor1: Colors.blueAccent,
-          gradColor2: Colors.cyanAccent,
-          mainColor: Colors.blue,
-          mainIcon: Icons.facebook_sharp,
-        ),
-
-        SizedBox(width: iconspace),
-
-        SocialButtons(
           mainIcon: Icons.email,
           gradColor1: Colors.red,
           gradColor2: const Color.fromARGB(255, 255, 171, 171),

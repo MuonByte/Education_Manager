@@ -3,6 +3,7 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/common/widgets/custom_navbar.dart';
 import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/features/chat/view/pages/chat_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,7 +107,11 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       child: CustomButton(
         buttonText: 'Get Started',
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ChatPage())
+          );
+        },
         backgroundColor: Colors.black,
       ),
     );
