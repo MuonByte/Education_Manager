@@ -1,44 +1,74 @@
+import 'package:client/features/chat/data/model/chat_parameters.dart';
+
 import 'package:flutter/material.dart';
+import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+
 
 class ChatPage extends StatefulWidget {
+  final ChatRoomModel room;
+
+  const ChatPage({super.key, required this.room});
+
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final List<_Message> _messages = [];
+
   bool _isLoading = false;
 
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
+
     setState(() {
       _messages.add(_Message(text: text, isUser: true));
       _isLoading = true;
     });
+
     _controller.clear();
-    Future.delayed(Duration(seconds: 2), () {
+    _scrollToBottom();
+
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
         _messages.add(_Message(text: 'AI response for: "$text"', isUser: false));
       });
+      _scrollToBottom();
+    });
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF2F2F7),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            Expanded(child: _buildChatSections()),
-            if (_isLoading) _buildStopButton(),
-            if (!_isLoading) _buildRegenerateButton(),
-            _buildInputField(),
-          ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildChatSections()),
+              if (_isLoading) _buildStopButton(),
+              if (!_isLoading) _buildRegenerateButton(),
+              _buildInputField(),
+            ],
+          ),
         ),
       ),
     );
@@ -55,11 +85,17 @@ class _ChatPageState extends State<ChatPage> {
       ),
       child: Row(
         children: [
-          GestureDetector(onTap: () => Navigator.pop(context), child: Icon(Icons.arrow_back_ios, size: 20)),
-          SizedBox(width: 12),
-          Text('TutorAI', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          Spacer(),
-          Icon(Icons.more_horiz, size: 24),
+          const CustomBackButton(),
+          const SizedBox(width: 12),
+          Text(
+            widget.room.roomName,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_horiz, size: 24),
+          ),
         ],
       ),
     );
@@ -67,15 +103,14 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildChatSections() {
     return ListView.builder(
+      controller: _scrollController,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: _messages.length + (_isLoading ? 1 : 0),
+      itemCount: _messages.length,
       itemBuilder: (context, i) {
-        if (_isLoading && i == _messages.length) {
-          // placeholder for loading spot; button shown below
-          return SizedBox.shrink();
-        }
         final msg = _messages[i];
-        return msg.isUser ? _UserSection(text: msg.text) : _AISection(text: msg.text);
+        return msg.isUser
+            ? _UserSection(text: msg.text)
+            : _AISection(text: msg.text);
       },
     );
   }
@@ -135,6 +170,7 @@ class _ChatPageState extends State<ChatPage> {
                 hintText: 'Send a message.',
                 border: InputBorder.none,
               ),
+              onSubmitted: (_) => _sendMessage(),
             ),
           ),
           GestureDetector(
@@ -188,7 +224,7 @@ class _AISection extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Color(0xFFE5E5EA),
+        color: Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

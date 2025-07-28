@@ -57,3 +57,11 @@ class FetchMessagesParams {
 
   Map<String, dynamic> toMap() => {"roomId": roomId};
 }
+
+class DeleteChatRoomParams {
+  final String roomId;
+
+  DeleteChatRoomParams({required this.roomId});
+
+  Map<String, dynamic> toMap() => {"roomId": roomId};
+}

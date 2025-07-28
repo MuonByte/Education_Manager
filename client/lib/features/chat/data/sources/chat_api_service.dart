@@ -9,6 +9,7 @@ abstract class ChatApiService {
   Future<Either<String, List<Map<String, dynamic>>>> fetchRooms(FetchChatRoomsParams params);
   Future<Either<String, Map<String, dynamic>>> sendMessage(SendMessageParams params);
   Future<Either<String, List<Map<String, dynamic>>>> fetchMessages(FetchMessagesParams params);
+  Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params); 
 }
 
 class ChatApiServiceImpl extends ChatApiService {
@@ -78,4 +79,17 @@ class ChatApiServiceImpl extends ChatApiService {
       return Left(err);
     }
   }
+
+  @override
+Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
+  try {
+    final response = await _client.delete("/chat/rooms/${params.roomId}");
+    return Right(response.data['message'] ?? 'Room deleted');
+  } 
+  
+  on DioException catch (e) {
+    final err = e.response?.data['message'] ?? e.message;
+    return Left(err);
+  }
+}
 }

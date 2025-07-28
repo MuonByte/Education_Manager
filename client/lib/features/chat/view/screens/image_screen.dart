@@ -9,7 +9,7 @@ class ImageDisplayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('عرض الصورة')),
+      appBar: AppBar(title: const Text('Image Presentation')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [Image.file(File(imagePath))],

@@ -7,4 +7,5 @@ abstract class ChatRepository {
   Future<Either<String, List<ChatRoomModel>>> fetchRooms(FetchChatRoomsParams params);
   Future<Either<String, MessageModel>> sendMessage(SendMessageParams params);
   Future<Either<String, List<MessageModel>>> fetchMessages(FetchMessagesParams params);
+  Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params);
 }

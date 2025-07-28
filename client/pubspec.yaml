@@ -9,16 +9,21 @@ environment:
 dependencies:
   build_runner: ^2.6.0
   camera: ^0.11.2
+  chat_bubbles: ^1.7.0
   dartz: ^0.10.1
   dio: ^5.8.0+1
+  equatable: ^2.0.7
+  file_picker: ^10.2.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_gemini: ^3.0.0
   flutter_screenutil: ^5.9.3
   gal: ^2.3.2
   get_it: ^8.0.3
   image_picker: ^1.1.2
   json_serializable: ^6.10.0
+  just_audio: ^0.10.4
   logger: ^2.6.1
   responsive_framework: ^1.5.1
   shared_preferences: ^2.5.3

@@ -2,8 +2,8 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'dart:io';
-import 'package:eduscan_app/widgets/input_widget.dart';
-import 'package:eduscan_app/widgets/message_widget.dart';
+import 'package:client/features/chat/view/widgets/input_widget.dart';
+import 'package:client/features/chat/view/widgets/message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -31,7 +31,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    Gemini.init(apiKey: 'AIzaSyB3VtLG3BHwaw9MOCJw4o9G32ouJM533a8');
   }
 
   void scrollToBottom() {

@@ -70,4 +70,14 @@ class ChatRepositoryImpl extends ChatRepository {
       },
     );
   }
+
+  @override
+  Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
+    final result = await _apiService.deleteRoom(params);
+    return result.fold(
+      (err) => Left(err),
+      (message) => Right(message),
+    );
+  }
+
 }

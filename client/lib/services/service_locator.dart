@@ -14,9 +14,11 @@ import 'package:client/features/chat/data/repository/chat_repo_impl.dart';
 import 'package:client/features/chat/data/sources/chat_api_service.dart';
 import 'package:client/features/chat/domain/repository/chat_repo.dart';
 import 'package:client/features/chat/domain/usecases/create_chat_usecase.dart';
+import 'package:client/features/chat/domain/usecases/delete_chat_usecase.dart';
 import 'package:client/features/chat/domain/usecases/fetch_chat_room_usecase.dart';
 import 'package:client/features/chat/domain/usecases/fetch_messages_usecase.dart';
 import 'package:client/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:client/core/network/dio_client.dart';
@@ -95,4 +97,15 @@ void setupServiceLocator() {
     FetchMessagesUsecase()
   );
 
+  sl.registerSingleton<DeleteChatRoomUsecase>(
+    DeleteChatRoomUsecase()
+  );
+
+  sl.registerFactory(
+    () => ChatRoomViewModel(
+      fetchChatRoomsUsecase: sl<FetchChatRoomsUsecase>(),
+      createChatRoomUsecase: sl<CreateChatRoomUsecase>(),
+      deleteChatRoomUsecase: sl<DeleteChatRoomUsecase>(),
+    ),
+  );
 }

@@ -1,9 +1,10 @@
+import 'package:client/core/navigation/router.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
+import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/services/service_locator.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -18,8 +19,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthStateCubit()..started(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthStateCubit>(
+          create: (_) => AuthStateCubit()..started(),
+        ),
+        BlocProvider<ChatRoomViewModel>(
+          create: (_) => sl<ChatRoomViewModel>()..getRooms(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
@@ -29,32 +37,22 @@ class MainApp extends StatelessWidget {
               Breakpoint(start: 451, end: 800, name: TABLET),
               Breakpoint(start: 801, end: 1920, name: DESKTOP),
               Breakpoint(start: 1921, end: double.infinity, name: '4K'),
-              
             ],
             child: child!,
           );
         },
-        home: BlocBuilder<AuthStateCubit,AuthState>(
+        home: BlocBuilder<AuthStateCubit, AuthState>(
           builder: (context, state) {
-            if(state is Authenticated) {
-              return HomePage();
+            if (state is Authenticated) {
+              return const HomePage();
             }
-            if(state is Unauthenticated) {
-              return Register();
+            if (state is Unauthenticated) {
+              return const Register();
             }
-            return Placeholder();
+            return const Placeholder();
           },
         ),
-        onGenerateRoute: (settings) {
-          return MaterialPageRoute(
-            builder: (context) {
-              return ResponsiveScaledBox(
-                width: null, 
-                child: HomePage(),
-              );
-            }
-          );
-        },
+        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }

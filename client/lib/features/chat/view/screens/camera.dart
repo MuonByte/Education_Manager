@@ -1,5 +1,4 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:gal/gal.dart';
