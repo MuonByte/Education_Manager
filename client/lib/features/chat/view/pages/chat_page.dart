@@ -2,6 +2,8 @@ import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/features/chat/view/screens/camera.dart';
+import 'package:client/features/chat/view/widgets/add_your_image.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_state.dart';
 
@@ -117,16 +119,20 @@ class _ChatPageState extends State<ChatPage> {
                           leading: const Icon(Icons.photo),
                           title: const Text('Send Photo'),
                           onTap: () {
-                            Navigator.pop(context);
-                            //_pickImageFromGallery();
+                            Navigator.pushReplacement(
+                              context, 
+                              MaterialPageRoute(builder: (context) => AddYourImage())
+                            );
                           },
                         ),
                         ListTile(
                           leading: const Icon(Icons.camera_alt),
                           title: const Text('Take Photo'),
                           onTap: () {
-                            Navigator.pop(context);
-                            //_openCamera();
+                            Navigator.pushReplacement(
+                              context, 
+                              MaterialPageRoute(builder: (context) => Camera())
+                            );
                           },
                         ),
                       ],

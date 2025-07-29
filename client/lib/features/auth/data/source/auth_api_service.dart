@@ -43,7 +43,7 @@ class AuthApiServiceImplementation extends AuthApiService {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var token = sharedPreferences.getString('token');
       var response = await sl<DioClient>().get(
-        ApiUrls.usersURL,
+        'https://68850680745306380a3a226c.mockapi.io/api/v1/users',
         options: Options(
           headers: {
             'Authorization' : 'Bearer $token'
