@@ -2,7 +2,7 @@ import 'package:client/features/auth/data/repository/auth_repo_impl.dart';
 import 'package:client/features/auth/data/source/auth_api_service.dart';
 import 'package:client/features/auth/data/source/auth_local_service.dart';
 import 'package:client/features/auth/domain/repository/auth_repo.dart';
-import 'package:client/features/auth/domain/usecases/forget_password_usecase.dart';
+import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/get_user.dart';
 import 'package:client/features/auth/domain/usecases/is_auth_usecase.dart';
 import 'package:client/features/auth/domain/usecases/login_usecase.dart';
@@ -61,8 +61,8 @@ void setupServiceLocator() {
     LoginUsecase()
   );
 
-  sl.registerSingleton<ForgetPasswordUsecase>(
-    ForgetPasswordUsecase()
+  sl.registerSingleton<SendOtpUsecase>(
+    SendOtpUsecase()
   );
 
   sl.registerSingleton<ResetPasswordUsecase>(

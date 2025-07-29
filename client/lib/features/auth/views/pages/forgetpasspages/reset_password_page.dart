@@ -3,7 +3,7 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/features/auth/data/model/reset_password_requset.dart';
 import 'package:client/features/auth/domain/usecases/reset_password_usecase.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';

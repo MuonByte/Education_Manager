@@ -1,4 +1,4 @@
-import 'package:client/features/auth/data/model/forget_password_request.dart';
+import 'package:client/features/auth/data/model/send_otp_request.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/data/model/reset_password_requset.dart';
@@ -12,7 +12,7 @@ abstract class AuthRepository {
   Future<bool> isAuth(); 
   Future<Either> getUser();
   Future logout();
-  Future<Either> forgetPassword(ForgetPasswordRequestParameters param);
+  Future<Either> sendOtp(SendOtpRequestParameters otpReq);
   Future<Either> resetPassword(ResetPasswordRequestParameters param);
   Future<Either> verifyOtp(VerifyOtpRequest param);
 }

@@ -5,7 +5,7 @@ import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:client/features/auth/views/pages/login_page.dart';
 import 'package:client/common/widgets/custom_button.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';

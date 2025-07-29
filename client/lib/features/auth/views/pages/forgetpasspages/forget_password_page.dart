@@ -4,7 +4,7 @@ import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/email_reset_page.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/phone_reset_page.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/selectable_card.dart';
 

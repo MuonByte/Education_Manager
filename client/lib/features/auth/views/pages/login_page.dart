@@ -5,12 +5,11 @@ import 'package:client/features/auth/domain/usecases/login_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/forget_password_page.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/common/widgets/custom_button.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
-import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
 
 import 'package:flutter/material.dart';

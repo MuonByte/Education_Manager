@@ -4,7 +4,7 @@ import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/features/auth/views/pages/verfy%20pages/email_verify_page.dart';
 import 'package:client/features/auth/views/pages/verfy%20pages/phone_verify_page.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/selectable_card.dart';
 

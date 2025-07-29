@@ -1,5 +1,5 @@
 import 'package:client/core/constants/api_urls.dart';
-import 'package:client/features/auth/data/model/forget_password_request.dart';
+import 'package:client/features/auth/data/model/send_otp_request.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/data/model/reset_password_requset.dart';
@@ -15,7 +15,7 @@ abstract class AuthApiService {
   Future<Either> signup(SignupRequestParameters signupReq);
   Future<Either> getUser();
   Future<Either> login(LoginRequestParameters loginReq);
-  Future<Either> forgetPassword(ForgetPasswordRequestParameters forgetReq);
+  Future<Either> sendOtp(SendOtpRequestParameters otpReq);
   Future<Either> resetPassword(ResetPasswordRequestParameters param);
   Future<Either> verifyOtp(VerifyOtpRequest param);
 } 
@@ -74,11 +74,11 @@ class AuthApiServiceImplementation extends AuthApiService {
   }
 
   @override
-  Future<Either> forgetPassword(ForgetPasswordRequestParameters forgetReq) async {
+  Future<Either> sendOtp(SendOtpRequestParameters otpReq) async {
     try {
       var response = await sl<DioClient>().post(
         ApiUrls.loginURL,
-        data: forgetReq.toMap(),
+        data: otpReq.toMap(),
       );
       return Right(response);
     } 

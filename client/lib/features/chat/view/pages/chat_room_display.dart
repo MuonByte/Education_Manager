@@ -1,4 +1,4 @@
-import 'package:client/features/chat/data/model/chat_parameters.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/chat/view/pages/chat_page.dart';
 import 'package:client/features/chat/viewmodel/bloc/chat_room_state.dart';
 import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
@@ -24,7 +24,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F7),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
@@ -36,7 +36,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is ChatRoomLoaded) {
                     if (state.rooms.isEmpty) {
-                      return const Center(child: Text("No chat rooms available."));
+                      return const Center(child: Text("No chat rooms available.", style: TextStyle(fontFamily: 'Poppins'),));
                     }
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
@@ -68,7 +68,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.chat_bubble_outline_rounded, size: 28),
+                                const Icon(Icons.chat_rounded, size: 28),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
@@ -76,6 +76,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16,
+                                      fontFamily: 'Poppins'
                                     ),
                                   ),
                                 ),
@@ -83,7 +84,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                                   onPressed: () {
                                     context.read<ChatRoomViewModel>().deleteRoom(room.roomId);
                                   },
-                                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                  icon: const Icon(Icons.delete_forever_rounded, color: Colors.red),
                                 ),
                               ],
                             ),
@@ -92,7 +93,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                       },
                     );
                   } else if (state is ChatRoomError) {
-                    return Center(child: Text("Error: ${state.error}"));
+                    return Center(child: Text("Error: ${state.error}", style: TextStyle(fontFamily: 'Poppins'),));
                   } else {
                     return const SizedBox.shrink();
                   }
@@ -119,11 +120,11 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.chat, size: 24),
+          CustomBackButton(),
           const SizedBox(width: 12),
           const Text(
             'Your Chat Rooms',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400,fontFamily: 'Poppins'),
           ),
           const Spacer(),
           IconButton(
@@ -154,6 +155,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
               decoration: const InputDecoration(
                 hintText: 'Create new room...',
                 border: InputBorder.none,
+                hintStyle: TextStyle(fontFamily: 'Poppins')
               ),
             ),
           ),
@@ -161,13 +163,11 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
             onTap: () {
               final name = _roomNameController.text.trim();
               if (name.isNotEmpty) {
-                context.read<ChatRoomViewModel>().createRoom(
-                      CreateChatRoomParams(roomName: name) as String,
-                    );
+                context.read<ChatRoomViewModel>().createRoom(name);
                 _roomNameController.clear();
               }
             },
-            child: const Icon(Icons.send, color: Colors.grey),
+            child: const Icon(Icons.send_and_archive_rounded, color: Colors.grey),
           ),
         ],
       ),

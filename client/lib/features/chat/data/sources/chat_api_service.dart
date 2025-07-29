@@ -20,7 +20,7 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<Either<String, Map<String, dynamic>>> createRoom(CreateChatRoomParams params) async {
     try {
-      final response = await _client.post("/chat/rooms", data: params.toMap());
+      final response = await _client.post("https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms", data: params.toMap());
       return Right(response.data);
     } 
     
@@ -33,7 +33,7 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<Either<String, List<Map<String, dynamic>>>> fetchRooms(FetchChatRoomsParams params) async {
     try {
-      final response = await _client.get("/chat/rooms");
+      final response = await _client.get("https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms");
       final list = List<Map<String, dynamic>>.from(response.data);
       return Right(list);
     } 
@@ -81,15 +81,17 @@ class ChatApiServiceImpl extends ChatApiService {
   }
 
   @override
-Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
-  try {
-    final response = await _client.delete("/chat/rooms/${params.roomId}");
-    return Right(response.data['message'] ?? 'Room deleted');
-  } 
-  
-  on DioException catch (e) {
-    final err = e.response?.data['message'] ?? e.message;
-    return Left(err);
+  Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
+    try {
+      final response = await _client.delete(
+        "https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms/${params.roomId}",
+      );
+      return Right(response.data['message'] ?? 'Room deleted');
+    } 
+    on DioException catch (e) {
+      final err = e.response?.data['message'] ?? e.message;
+      return Left(err);
+    }
   }
-}
+
 }

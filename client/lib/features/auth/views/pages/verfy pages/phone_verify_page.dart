@@ -3,10 +3,10 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/core/utils/validators.dart';
-import 'package:client/features/auth/data/model/forget_password_request.dart';
-import 'package:client/features/auth/domain/usecases/forget_password_usecase.dart';
+import 'package:client/features/auth/data/model/send_otp_request.dart';
+import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:client/features/auth/views/widgets/otp_dialog.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/services/service_locator.dart';
 
@@ -105,8 +105,8 @@ Widget _verifyButton(BuildContext context, _formKey, TextEditingController _phon
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             context.read<ButtonStateCubit>().excute(
-              usecase: sl<ForgetPasswordUsecase>(),
-              params: ForgetPasswordRequestParameters(
+              usecase: sl<SendOtpUsecase>(),
+              params: SendOtpRequestParameters(
                 value: _phoneNumberController.text,
                 method: 'phone',
               ),

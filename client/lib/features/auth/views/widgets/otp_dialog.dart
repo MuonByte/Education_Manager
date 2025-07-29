@@ -2,9 +2,9 @@ import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/helper/helper_functions.dart';
-import 'package:client/features/auth/data/model/forget_password_request.dart';
+import 'package:client/features/auth/data/model/send_otp_request.dart';
 import 'package:client/features/auth/data/model/verify_otp_request.dart';
-import 'package:client/features/auth/domain/usecases/forget_password_usecase.dart';
+import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/verifyotp_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/reset_password_page.dart';
 import 'package:client/services/service_locator.dart';
@@ -178,8 +178,8 @@ class _OtpDialogState extends State<OtpDialog> {
                   buttonText: 'Send Again',
                   onPressed: () {
                     _resendCubit.excute(
-                      usecase: sl<ForgetPasswordUsecase>(),
-                      params: ForgetPasswordRequestParameters(
+                      usecase: sl<SendOtpUsecase>(),
+                      params: SendOtpRequestParameters(
                         value: widget.contact,
                         method: widget.isEmail ? 'email' : 'phone',
                       ),

@@ -1,4 +1,4 @@
-import 'package:client/features/auth/data/model/forget_password_request.dart';
+import 'package:client/features/auth/data/model/send_otp_request.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/data/model/reset_password_requset.dart';
@@ -74,8 +74,8 @@ class AuthRepositoryImplementation extends AuthRepository{
   }
   
   @override
-  Future<Either> forgetPassword(ForgetPasswordRequestParameters forgetReq) async {
-    final result = await sl<AuthApiService>().forgetPassword(forgetReq);
+  Future<Either> sendOtp(SendOtpRequestParameters otpReq) async {
+    final result = await sl<AuthApiService>().sendOtp(otpReq);
     return result.fold(
       (error) => Left(error),
       (data) => Right(data),

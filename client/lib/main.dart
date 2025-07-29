@@ -5,6 +5,7 @@ import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/services/service_locator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';

@@ -1,7 +1,7 @@
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 
 import 'package:flutter/material.dart';
-import 'package:client/features/auth/views/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
 
 
 class ChatPage extends StatefulWidget {

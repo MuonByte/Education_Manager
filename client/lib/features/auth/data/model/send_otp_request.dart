@@ -1,8 +1,8 @@
-class ForgetPasswordRequestParameters {
+class SendOtpRequestParameters {
   final String value;
   final String method;
 
-  ForgetPasswordRequestParameters({
+  SendOtpRequestParameters({
     required this.value,
     required this.method,
   });
