@@ -1,3 +1,4 @@
+import 'package:client/core/constants/api_urls.dart';
 import 'package:client/core/network/dio_client.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 
@@ -20,7 +21,7 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<Either<String, Map<String, dynamic>>> createRoom(CreateChatRoomParams params) async {
     try {
-      final response = await _client.post("https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms", data: params.toMap());
+      final response = await _client.post(ApiUrls.createRoomsURL, data: params.toMap());
       return Right(response.data);
     } 
     
@@ -33,7 +34,7 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<Either<String, List<Map<String, dynamic>>>> fetchRooms(FetchChatRoomsParams params) async {
     try {
-      final response = await _client.get("https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms");
+      final response = await _client.get(ApiUrls.chatroomURL);
       final list = List<Map<String, dynamic>>.from(response.data);
       return Right(list);
     } 
@@ -47,19 +48,15 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<MessageModel> sendMessage(SendMessageParams params) async {
     final response = await _client.post(
-      'https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms',
-      data: {
-        'messageText': params.messageText,
-        'imageUrl': params.imageUrl,
-        'userId': params.userId, 
-      },
+      ApiUrls.messagesURL.replaceFirst(':id', params.roomId),
+      data: params.toMap(),
     );
     return MessageModel.fromJson(response.data);
   }
 
   @override
   Future<List<MessageModel>> fetchMessages(String roomId) async {
-    final response = await _client.get('https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms');
+    final response = await _client.get(ApiUrls.messagesURL.replaceFirst(':id', roomId));
     final List data = response.data;
     return data.map((json) => MessageModel.fromJson(json)).toList();
   }
@@ -68,7 +65,7 @@ class ChatApiServiceImpl extends ChatApiService {
   Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
     try {
       final response = await _client.delete(
-        "https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms/${params.roomId}",
+        ApiUrls.chatroomURL + '/' + params.roomId,
       );
       return Right(response.data['message'] ?? 'Room deleted');
     } 

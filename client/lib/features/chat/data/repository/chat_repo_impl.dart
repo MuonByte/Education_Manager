@@ -1,18 +1,18 @@
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 import 'package:client/features/chat/data/sources/chat_api_service.dart';
 import 'package:client/features/chat/domain/repository/chat_repo.dart';
-import 'package:client/services/service_locator.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 class ChatRepositoryImpl extends ChatRepository {
-  ChatRepositoryImpl(ChatApiService chatApiService);
+  final ChatApiService _chatApiService;
 
+  ChatRepositoryImpl(this._chatApiService);
 
   @override
   Future<Either<String, ChatRoomModel>> createRoom(CreateChatRoomParams params) async {
-    final result = await sl<ChatApiService>().createRoom(params);
+    final result = await _chatApiService.createRoom(params);
     return result.fold(
       (err) => Left(err),
       (data) {
@@ -28,7 +28,7 @@ class ChatRepositoryImpl extends ChatRepository {
 
   @override
   Future<Either<String, List<ChatRoomModel>>> fetchRooms(FetchChatRoomsParams params) async {
-    final result = await sl<ChatApiService>().fetchRooms(params);
+    final result = await _chatApiService.fetchRooms(params);
     return result.fold(
       (err) => Left(err),
       (list) {
@@ -45,7 +45,7 @@ class ChatRepositoryImpl extends ChatRepository {
   @override
   Future<Either<String, List<MessageModel>>> fetchMessages(FetchMessagesParams params) async {
     try {
-      final messages = await sl<ChatApiService>().fetchMessages(params.roomId);
+      final messages = await _chatApiService.fetchMessages(params.roomId);
       return Right(messages);
     } 
     catch (e) {
@@ -56,7 +56,7 @@ class ChatRepositoryImpl extends ChatRepository {
   @override
   Future<Either<String, MessageModel>> sendMessage(SendMessageParams params) async {
     try {
-      final message = await sl<ChatApiService>().sendMessage(params);
+      final message = await _chatApiService.sendMessage(params);
       return Right(message);
     } 
     on DioException catch (e) {
@@ -66,7 +66,7 @@ class ChatRepositoryImpl extends ChatRepository {
 
   @override
   Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
-    final result = await sl<ChatApiService>().deleteRoom(params);
+    final result = await _chatApiService.deleteRoom(params);
     return result.fold(
       (err) => Left(err),
       (message) => Right(message),

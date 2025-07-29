@@ -12,14 +12,14 @@ class ChatRoomModel {
 
 class MessageModel {
   final String messageId;
-  final String messageText;
+  final String content;
   final String? imageUrl;
   final String userId;
   final DateTime createdAt;
 
   MessageModel({
     required this.messageId,
-    required this.messageText,
+    required this.content,
     this.imageUrl,
     required this.userId,
     required this.createdAt,
@@ -28,7 +28,7 @@ class MessageModel {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       messageId: json['messageId'],
-      messageText: json['messageText'],
+      content: json['content'],
       imageUrl: json['imageUrl'],
       userId: json['userId'],
       createdAt: DateTime.parse(json['createdAt']),
@@ -38,7 +38,7 @@ class MessageModel {
   Map<String, dynamic> toJson() {
     return {
       'messageId': messageId,
-      'messageText': messageText,
+      'content': content,
       'imageUrl': imageUrl,
       'userId': userId,
       'createdAt': createdAt.toIso8601String(),
@@ -59,20 +59,22 @@ class FetchChatRoomsParams {}
 
 class SendMessageParams {
   final String roomId;
-  final String messageText;
+  final String content;
   final String? imageUrl;
   final String userId;
 
   SendMessageParams({
     required this.roomId,
-    required this.messageText,
+    required this.content,
     this.imageUrl,
     required this.userId,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'text': messageText,
+      'content': content,
+      'imageUrl': imageUrl,
+      'userId': userId,
     };
   }
 }

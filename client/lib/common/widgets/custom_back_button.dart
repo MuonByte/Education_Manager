@@ -2,9 +2,8 @@ import 'package:client/core/theme/pallete.dart';
 import 'package:flutter/material.dart';
 
 class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({
-    super.key,
-  });
+  final bool isAuth;
+  const CustomBackButton({super.key, this.isAuth = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +15,17 @@ class CustomBackButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           onTap: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } 
-            else {
+            if (isAuth) {
               Navigator.pushReplacementNamed(context, '/home');
+            } else {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                final currentRoute = ModalRoute.of(context)?.settings.name;
+                if (currentRoute != '/home' && currentRoute != '/chat') {
+                  Navigator.pushReplacementNamed(context, '/home');
+                }
+              }
             }
           },
           borderRadius: BorderRadius.circular(18),

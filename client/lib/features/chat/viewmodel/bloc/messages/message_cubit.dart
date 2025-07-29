@@ -27,9 +27,19 @@ class MessagesCubit extends Cubit<MessagesState> {
 
   Future<void> sendMessage(SendMessageParams params) async {
     final result = await sendMessageUsecase(param: params);
+
     result.fold(
       (error) => emit(MessagesError(error)),
-      (message) => emit(MessageSent(message)),
+      (message) {
+        final currentState = state;
+        if (currentState is MessagesLoaded) {
+          final updatedMessages = List<MessageModel>.from(currentState.messages)
+            ..add(message);
+          emit(MessagesLoaded(messages: updatedMessages));
+        } else {
+          emit(MessagesLoaded(messages: [message]));
+        }
+      },
     );
   }
 }

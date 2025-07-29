@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Row(
                     children: [
-                      CustomBackButton(),
+                      CustomBackButton(isAuth: true),
                     ],
                   ),
 

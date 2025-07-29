@@ -43,7 +43,7 @@ class _ChatPageState extends State<ChatPage> {
       context.read<MessagesCubit>().sendMessage(
         SendMessageParams(
           roomId: widget.room.roomId,
-          messageText: text,
+          content: text,
           userId: userId!,
         ),
       );
@@ -169,8 +169,8 @@ class _ChatPageState extends State<ChatPage> {
               final isUser = msg.userId == currentUserId;
 
               return isUser
-                ? _UserSection(text: msg.messageText)
-                : _AISection(text: msg.messageText);
+                ? _UserSection(text: msg.content)
+                : _AISection(text: msg.content);
             }
           );
         } else if (state is MessagesError) {

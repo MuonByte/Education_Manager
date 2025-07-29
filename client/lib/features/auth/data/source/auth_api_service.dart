@@ -77,7 +77,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> sendOtp(SendOtpRequestParameters otpReq) async {
     try {
       var response = await sl<DioClient>().post(
-        ApiUrls.loginURL,
+        ApiUrls.forgetPassURL,
         data: otpReq.toMap(),
       );
       return Right(response);
@@ -92,7 +92,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> resetPassword(ResetPasswordRequestParameters param) async {
     try {
       final response = await sl<DioClient>().post(
-        ApiUrls.loginURL,
+        ApiUrls.resetPassURL,
         data: param.toMap(),
       );
       return Right(response);
@@ -106,7 +106,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> verifyOtp(VerifyOtpRequest param) async {
     try {
       final response = await sl<DioClient>().post(
-        ApiUrls.testURL,
+        ApiUrls.resetPassURL,
         data: param.toMap(),
       );
       return Right(response);
