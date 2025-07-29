@@ -1,12 +1,15 @@
+import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
+import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
+import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
+import 'package:client/features/chat/viewmodel/bloc/messages/message_state.dart';
 
 import 'package:flutter/material.dart';
-import 'package:client/common/widgets/custom_back_button.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatRoomModel room;
-
   const ChatPage({super.key, required this.room});
 
   @override
@@ -16,29 +19,35 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final List<_Message> _messages = [];
-
-  bool _isLoading = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.read<MessagesCubit>().fetchMessages(
+      FetchMessagesParams(roomId: widget.room.roomId),
+    );
+  });
+  }
 
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    setState(() {
-      _messages.add(_Message(text: text, isUser: true));
-      _isLoading = true;
-    });
+    final authState = context.read<AuthStateCubit>().state;
+    if (authState is Authenticated) {
+      final userId = authState.user.userId;
 
-    _controller.clear();
-    _scrollToBottom();
+      context.read<MessagesCubit>().sendMessage(
+        SendMessageParams(
+          roomId: widget.room.roomId,
+          messageText: text,
+          userId: userId!,
+        ),
+      );
 
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-        _messages.add(_Message(text: 'AI response for: "$text"', isUser: false));
-      });
-      _scrollToBottom();
-    });
+      _controller.clear();
+    }
   }
 
   void _scrollToBottom() {
@@ -46,7 +55,7 @@ class _ChatPageState extends State<ChatPage> {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       }
@@ -63,9 +72,7 @@ class _ChatPageState extends State<ChatPage> {
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(child: _buildChatSections()),
-              if (_isLoading) _buildStopButton(),
-              if (!_isLoading) _buildRegenerateButton(),
+              Expanded(child: _buildChatSection()),
               _buildInputField(),
             ],
           ),
@@ -76,12 +83,14 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2))
+        ],
       ),
       child: Row(
         children: [
@@ -93,7 +102,39 @@ class _ChatPageState extends State<ChatPage> {
           ),
           const Spacer(),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (_) {
+                  return SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.photo),
+                          title: const Text('Send Photo'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            //_pickImageFromGallery();
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.camera_alt),
+                          title: const Text('Take Photo'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            //_openCamera();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
             icon: const Icon(Icons.more_horiz, size: 24),
           ),
         ],
@@ -101,61 +142,43 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildChatSections() {
-    return ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: _messages.length,
-      itemBuilder: (context, i) {
-        final msg = _messages[i];
-        return msg.isUser
-            ? _UserSection(text: msg.text)
-            : _AISection(text: msg.text);
+  Widget _buildChatSection() {
+    return BlocConsumer<MessagesCubit, MessagesState>(
+      listener: (context, state) {
+        if (state is MessagesLoaded) _scrollToBottom();
+      },
+      builder: (context, state) {
+        final authState = context.read<AuthStateCubit>().state;
+        final currentUserId = authState is Authenticated ? authState.user.userId : null;
+        if (state is MessagesLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is MessagesLoaded) {
+          final messages = state.messages;
+          return ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: messages.length,
+            itemBuilder: (context, i) {
+              final msg = messages[i];
+              final isUser = msg.userId == currentUserId;
+
+              return isUser
+                ? _UserSection(text: msg.messageText)
+                : _AISection(text: msg.messageText);
+            }
+          );
+        } else if (state is MessagesError) {
+          return Center(child: Text(state.error));
+        }
+        return const SizedBox.shrink();
       },
     );
   }
 
-  Widget _buildStopButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: ElevatedButton.icon(
-        onPressed: () {},
-        icon: Icon(Icons.stop, color: Colors.black),
-        label: Text('Stop generating...', style: TextStyle(color: Colors.black)),
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          side: BorderSide(color: Colors.grey.shade300),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRegenerateButton() {
-    if (_messages.any((m) => !m.isUser)) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: ElevatedButton.icon(
-          onPressed: () {},
-          icon: Icon(Icons.refresh, color: Colors.black),
-          label: Text('Regenerate Response', style: TextStyle(color: Colors.black)),
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            side: BorderSide(color: Colors.grey.shade300),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
-        ),
-      );
-    }
-    return SizedBox.shrink();
-  }
-
   Widget _buildInputField() {
     return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -166,27 +189,22 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: TextField(
               controller: _controller,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Send a message.',
                 border: InputBorder.none,
+                hintStyle: TextStyle(fontFamily: 'Poppins'),
               ),
               onSubmitted: (_) => _sendMessage(),
             ),
           ),
           GestureDetector(
             onTap: _sendMessage,
-            child: Icon(Icons.send, color: Colors.grey),
+            child: const Icon(Icons.send, color: Colors.grey),
           ),
         ],
       ),
     );
   }
-}
-
-class _Message {
-  final String text;
-  final bool isUser;
-  _Message({required this.text, required this.isUser});
 }
 
 class _UserSection extends StatelessWidget {
@@ -196,18 +214,18 @@ class _UserSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          Icon(Icons.person_2_rounded, size: 30),
-          SizedBox(width: 12),
+          const Icon(Icons.person_2_rounded, size: 30),
+          const SizedBox(width: 12),
           Expanded(child: Text(text)),
-          Icon(Icons.edit, size: 20, color: Colors.grey),
+          const Icon(Icons.edit, size: 20, color: Colors.grey),
         ],
       ),
     );
@@ -221,10 +239,10 @@ class _AISection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -233,17 +251,20 @@ class _AISection extends StatelessWidget {
           Row(
             children: [
               Image.asset('assets/icon/app_icon.png', width: 55),
-              SizedBox(width: 8),
-              Spacer(),
-              Icon(Icons.copy, size: 20),
-              SizedBox(width: 12),
-              Icon(Icons.share, size: 20),
+              const SizedBox(width: 8),
+              const Spacer(),
+              const Icon(Icons.copy, size: 20),
+              const SizedBox(width: 12),
+              const Icon(Icons.share, size: 20),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(text),
         ],
       ),
     );
   }
+  
 }
+
+

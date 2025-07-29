@@ -7,8 +7,8 @@ import 'package:dio/dio.dart';
 abstract class ChatApiService {
   Future<Either<String, Map<String, dynamic>>> createRoom(CreateChatRoomParams params);
   Future<Either<String, List<Map<String, dynamic>>>> fetchRooms(FetchChatRoomsParams params);
-  Future<Either<String, Map<String, dynamic>>> sendMessage(SendMessageParams params);
-  Future<Either<String, List<Map<String, dynamic>>>> fetchMessages(FetchMessagesParams params);
+  Future<List<MessageModel>> fetchMessages(String roomId);
+  Future<MessageModel> sendMessage(SendMessageParams params);
   Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params); 
 }
 
@@ -45,39 +45,23 @@ class ChatApiServiceImpl extends ChatApiService {
   }
 
   @override
-  Future<Either<String, Map<String, dynamic>>> sendMessage(SendMessageParams params) async {
-    try {
-      FormData formData = FormData.fromMap({
-        'text': params.messageText,
-        if (params.imageFile != null)
-          'image': await MultipartFile.fromFile(params.imageFile!.path,
-              filename: params.imageFile!.path.split('/').last),
-      });
-
-      final response = await _client.post(
-        "/chat/rooms/${params.roomId}/messages",
-        data: formData,
-      );
-
-      return Right(response.data);
-    } on DioException catch (e) {
-      final err = e.response?.data['message'] ?? e.message;
-      return Left(err);
-    }
+  Future<MessageModel> sendMessage(SendMessageParams params) async {
+    final response = await _client.post(
+      'https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms',
+      data: {
+        'messageText': params.messageText,
+        'imageUrl': params.imageUrl,
+        'userId': params.userId, 
+      },
+    );
+    return MessageModel.fromJson(response.data);
   }
 
   @override
-  Future<Either<String, List<Map<String, dynamic>>>> fetchMessages(FetchMessagesParams params) async {
-    try {
-      final response = await _client.get("/chat/rooms/${params.roomId}/messages");
-      final list = List<Map<String, dynamic>>.from(response.data);
-      return Right(list);
-    } 
-    
-    on DioException catch (e) {
-      final err = e.response?.data['message'] ?? e.message;
-      return Left(err);
-    }
+  Future<List<MessageModel>> fetchMessages(String roomId) async {
+    final response = await _client.get('https://68850680745306380a3a226c.mockapi.io/api/v1/chat-rooms');
+    final List data = response.data;
+    return data.map((json) => MessageModel.fromJson(json)).toList();
   }
 
   @override

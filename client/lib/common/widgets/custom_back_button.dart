@@ -19,7 +19,6 @@ class CustomBackButton extends StatelessWidget {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             } 
-            
             else {
               Navigator.pushReplacementNamed(context, '/home');
             }

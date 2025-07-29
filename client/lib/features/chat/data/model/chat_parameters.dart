@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class ChatRoomModel {
   final bool newRoom;
   final String roomName;
@@ -15,12 +13,39 @@ class ChatRoomModel {
 class MessageModel {
   final String messageId;
   final String messageText;
+  final String? imageUrl;
+  final String userId;
+  final DateTime createdAt;
 
   MessageModel({
     required this.messageId,
     required this.messageText,
+    this.imageUrl,
+    required this.userId,
+    required this.createdAt,
   });
+
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      messageId: json['messageId'],
+      messageText: json['messageText'],
+      imageUrl: json['imageUrl'],
+      userId: json['userId'],
+      createdAt: DateTime.parse(json['createdAt']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'messageId': messageId,
+      'messageText': messageText,
+      'imageUrl': imageUrl,
+      'userId': userId,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
 }
+
 
 class CreateChatRoomParams {
   final String roomName;
@@ -35,12 +60,14 @@ class FetchChatRoomsParams {}
 class SendMessageParams {
   final String roomId;
   final String messageText;
-  final File? imageFile;
+  final String? imageUrl;
+  final String userId;
 
   SendMessageParams({
     required this.roomId,
     required this.messageText,
-    this.imageFile,
+    this.imageUrl,
+    required this.userId,
   });
 
   Map<String, dynamic> toMap() {

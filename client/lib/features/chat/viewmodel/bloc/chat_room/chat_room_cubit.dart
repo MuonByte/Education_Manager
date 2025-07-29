@@ -1,5 +1,5 @@
 import 'package:client/features/chat/domain/usecases/delete_chat_usecase.dart';
-import 'package:client/features/chat/viewmodel/bloc/chat_room_state.dart';
+import 'package:client/features/chat/viewmodel/bloc/chat_room/chat_room_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 

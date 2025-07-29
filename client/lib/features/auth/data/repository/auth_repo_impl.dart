@@ -6,6 +6,7 @@ import 'package:client/features/auth/data/model/user_model.dart';
 import 'package:client/features/auth/data/model/verify_otp_request.dart';
 import 'package:client/features/auth/data/source/auth_api_service.dart';
 import 'package:client/features/auth/data/source/auth_local_service.dart';
+import 'package:client/features/auth/domain/entities/user_entity.dart';
 import 'package:client/features/auth/domain/repository/auth_repo.dart';
 import 'package:client/services/service_locator.dart';
 
@@ -37,20 +38,37 @@ class AuthRepositoryImplementation extends AuthRepository{
   }
   
   @override
-  Future<Either> getUser() async {
+  Future<Either<String, UserEntity>> getUser() async {
     Either result = await sl<AuthApiService>().getUser();
+
     return result.fold(
       (error) {
         return Left(error);
-      }, 
+      },
       (data) {
         Response response = data;
-        var userModel = UserModel.fromMap(response.data);
-        var userEntity = userModel.toEntity();
-        return Right(userEntity);
-      }
+        final responseData = response.data;
+        Map<String, dynamic> userMap;
+
+        if (responseData is List && responseData.isNotEmpty) {
+          userMap = responseData.first as Map<String, dynamic>;
+        } else if (responseData is Map<String, dynamic>) {
+          userMap = responseData;
+        } else {
+          return Left('Unexpected user data format');
+        }
+
+        try {
+          final userModel = UserModel.fromMap(userMap);
+          final userEntity = userModel.toEntity();
+          return Right(userEntity);
+        } catch (e) {
+          return Left('Failed to parse user: ${e.toString()}');
+        }
+      },
     );
   }
+
   
   @override
   Future logout() async {

@@ -1,7 +1,10 @@
 import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/chat/view/pages/chat_page.dart';
-import 'package:client/features/chat/viewmodel/bloc/chat_room_state.dart';
+import 'package:client/features/chat/viewmodel/bloc/chat_room/chat_room_state.dart';
+import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
+import 'package:client/services/service_locator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,7 +52,10 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ChatPage(room: room,),
+                                builder: (_) => BlocProvider<MessagesCubit>(
+                                  create: (_) => sl<MessagesCubit>(),
+                                  child: ChatPage(room: room),
+                                ),
                               ),
                             );
                           },

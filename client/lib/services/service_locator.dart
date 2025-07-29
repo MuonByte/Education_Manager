@@ -10,6 +10,7 @@ import 'package:client/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:client/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:client/features/auth/domain/usecases/verifyotp_usecase.dart';
+import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/chat/data/repository/chat_repo_impl.dart';
 import 'package:client/features/chat/data/sources/chat_api_service.dart';
 import 'package:client/features/chat/domain/repository/chat_repo.dart';
@@ -18,6 +19,7 @@ import 'package:client/features/chat/domain/usecases/delete_chat_usecase.dart';
 import 'package:client/features/chat/domain/usecases/fetch_chat_room_usecase.dart';
 import 'package:client/features/chat/domain/usecases/fetch_messages_usecase.dart';
 import 'package:client/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
 
 import 'package:get_it/get_it.dart';
@@ -108,4 +110,11 @@ void setupServiceLocator() {
       deleteChatRoomUsecase: sl<DeleteChatRoomUsecase>(),
     ),
   );
+
+  sl.registerFactory<MessagesCubit>(() => MessagesCubit(
+    sendMessageUsecase: sl(),
+    fetchMessagesUsecase: sl(),
+  ));
+
+  sl.registerLazySingleton(() => AuthStateCubit(sl(), sl()));
 }

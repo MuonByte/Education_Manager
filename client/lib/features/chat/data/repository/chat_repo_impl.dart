@@ -1,17 +1,18 @@
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 import 'package:client/features/chat/data/sources/chat_api_service.dart';
 import 'package:client/features/chat/domain/repository/chat_repo.dart';
+import 'package:client/services/service_locator.dart';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 
 class ChatRepositoryImpl extends ChatRepository {
-  final ChatApiService _apiService;
+  ChatRepositoryImpl(ChatApiService chatApiService);
 
-  ChatRepositoryImpl(this._apiService);
 
   @override
   Future<Either<String, ChatRoomModel>> createRoom(CreateChatRoomParams params) async {
-    final result = await _apiService.createRoom(params);
+    final result = await sl<ChatApiService>().createRoom(params);
     return result.fold(
       (err) => Left(err),
       (data) {
@@ -27,7 +28,7 @@ class ChatRepositoryImpl extends ChatRepository {
 
   @override
   Future<Either<String, List<ChatRoomModel>>> fetchRooms(FetchChatRoomsParams params) async {
-    final result = await _apiService.fetchRooms(params);
+    final result = await sl<ChatApiService>().fetchRooms(params);
     return result.fold(
       (err) => Left(err),
       (list) {
@@ -42,38 +43,30 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  Future<Either<String, MessageModel>> sendMessage(SendMessageParams params) async {
-    final result = await _apiService.sendMessage(params);
-    return result.fold(
-      (err) => Left(err),
-      (data) {
-        final msg = MessageModel(
-          messageId: data['messageId'],
-          messageText: data['text'],
-        );
-        return Right(msg);
-      },
-    );
+  Future<Either<String, List<MessageModel>>> fetchMessages(FetchMessagesParams params) async {
+    try {
+      final messages = await sl<ChatApiService>().fetchMessages(params.roomId);
+      return Right(messages);
+    } 
+    catch (e) {
+      return Left('Failed to fetch messages');
+    }
   }
 
   @override
-  Future<Either<String, List<MessageModel>>> fetchMessages(FetchMessagesParams params) async {
-    final result = await _apiService.fetchMessages(params);
-    return result.fold(
-      (err) => Left(err),
-      (list) {
-        final msgs = list.map((e) => MessageModel(
-          messageId: e['messageId'],
-          messageText: e['text'],
-        )).toList();
-        return Right(msgs);
-      },
-    );
+  Future<Either<String, MessageModel>> sendMessage(SendMessageParams params) async {
+    try {
+      final message = await sl<ChatApiService>().sendMessage(params);
+      return Right(message);
+    } 
+    on DioException catch (e) {
+      return Left('Failed to send message $e');
+    }
   }
 
   @override
   Future<Either<String, String>> deleteRoom(DeleteChatRoomParams params) async {
-    final result = await _apiService.deleteRoom(params);
+    final result = await sl<ChatApiService>().deleteRoom(params);
     return result.fold(
       (err) => Left(err),
       (message) => Right(message),

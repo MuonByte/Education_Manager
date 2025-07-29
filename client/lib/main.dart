@@ -23,7 +23,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthStateCubit>(
-          create: (_) => AuthStateCubit()..started(),
+          create: (_) => sl<AuthStateCubit>()..started(),
         ),
         BlocProvider<ChatRoomViewModel>(
           create: (_) => sl<ChatRoomViewModel>()..getRooms(),
