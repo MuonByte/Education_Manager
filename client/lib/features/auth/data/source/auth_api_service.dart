@@ -6,6 +6,7 @@ import 'package:client/features/auth/data/model/reset_password_requset.dart';
 import 'package:client/features/auth/data/model/verify_otp_request.dart';
 import 'package:client/services/service_locator.dart';
 import 'package:client/core/network/dio_client.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

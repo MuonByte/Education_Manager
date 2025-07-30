@@ -47,6 +47,7 @@ class _OtpDialogState extends State<OtpDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider<ButtonStateCubit>.value(value: _verifyCubit),
@@ -58,7 +59,7 @@ class _OtpDialogState extends State<OtpDialog> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -75,7 +76,7 @@ class _OtpDialogState extends State<OtpDialog> {
               SizedBox(height: 8),
               Text(
                 'We Have Sent Code To Your Given Contact Info',
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withOpacity(0.6)),
               ),
               SizedBox(height: 4),
               Text(
@@ -92,7 +93,7 @@ class _OtpDialogState extends State<OtpDialog> {
                     height: 55,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade400),
+                      border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.4)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextField(
@@ -163,7 +164,7 @@ class _OtpDialogState extends State<OtpDialog> {
                       );
                     }
                   },
-                  backgroundColor: Colors.black,
+                  backgroundColor: theme.colorScheme.primary,
                 ),
               ),
 
@@ -194,7 +195,7 @@ class _OtpDialogState extends State<OtpDialog> {
                       ),
                     );
                   },
-                  backgroundColor: Colors.grey,
+                  backgroundColor: theme.colorScheme.secondary,
                 ),
               ),
             ],

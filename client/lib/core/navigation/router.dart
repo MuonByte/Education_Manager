@@ -3,6 +3,7 @@ import 'package:client/features/chat/view/pages/chat_page.dart';
 import 'package:client/features/chat/view/pages/chat_room_display.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
+import 'package:client/features/organizer/view/pages/book_tracker_page.dart';
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,9 @@ class AppRouter {
 
       case '/chat-rooms':
         return MaterialPageRoute(builder: (_) => const ChatRoomsPage());
+
+      case '/book_organizer':
+        return MaterialPageRoute(builder: (_) => BookTrackerPage());
 
       case '/chat-page':
         final args = settings.arguments;

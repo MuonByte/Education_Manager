@@ -34,7 +34,7 @@ class ChatApiServiceImpl extends ChatApiService {
   @override
   Future<Either<String, List<Map<String, dynamic>>>> fetchRooms(FetchChatRoomsParams params) async {
     try {
-      final response = await _client.get(ApiUrls.chatroomURL);
+      final response = await _client.get(ApiUrls.chatroomURL, queryParameters: params.toMap());
       final list = List<Map<String, dynamic>>.from(response.data);
       return Right(list);
     } 

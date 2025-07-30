@@ -1,4 +1,4 @@
-import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/custom_header.dart';
 import 'package:client/features/chat/view/pages/chat_page.dart';
 import 'package:client/features/chat/viewmodel/bloc/chat_room/chat_room_state.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
@@ -26,12 +26,13 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: theme.colorScheme.surfaceContainerLow,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
+            CustomHeader(title: 'Chatroom'),
             Expanded(
               child: BlocBuilder<ChatRoomViewModel, ChatRoomState>(
                 builder: (context, state) {
@@ -39,7 +40,12 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is ChatRoomLoaded) {
                     if (state.rooms.isEmpty) {
-                      return const Center(child: Text("No chat rooms available.", style: TextStyle(fontFamily: 'Poppins'),));
+                      return const Center(
+                        child: Text(
+                          "No chat rooms available.", 
+                          style: TextStyle(fontFamily: 'Poppins'),
+                        )
+                      );
                     }
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
@@ -62,13 +68,13 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                           child: Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: theme.colorScheme.surface,
                               borderRadius: BorderRadius.circular(16),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black12,
+                                  color: theme.shadowColor.withOpacity(0.12),
                                   blurRadius: 8,
-                                  offset: Offset(0, 2),
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
@@ -90,7 +96,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                                   onPressed: () {
                                     context.read<ChatRoomViewModel>().deleteRoom(room.roomId);
                                   },
-                                  icon: const Icon(Icons.delete_forever_rounded, color: Colors.red),
+                                  icon: Icon(Icons.delete_forever_rounded, color: theme.colorScheme.error),
                                 ),
                               ],
                             ),
@@ -106,62 +112,49 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                 },
               ),
             ),
-            _buildCreateRoomField(),
+            _buildCreateRoomField(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2))
-        ],
-      ),
-      child: Row(
-        children: [
-          CustomBackButton(isAuth: true,),
-          const SizedBox(width: 12),
-          const Text(
-            'Your Chat Rooms',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400,fontFamily: 'Poppins'),
-          ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => context.read<ChatRoomViewModel>().getRooms(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCreateRoomField() {
+  Widget _buildCreateRoomField(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2))
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withOpacity(0.12), 
+            blurRadius: 8, 
+            offset: const Offset(0, 2)
+          )
         ],
       ),
       child: Row(
         children: [
+          IconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(
+              Icons.refresh,
+              color: theme.colorScheme.surfaceContainerHigh
+            ),
+            onPressed: () => context.read<ChatRoomViewModel>().getRooms(),
+          ),
           Expanded(
             child: TextField(
               controller: _roomNameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Create new room...',
                 border: InputBorder.none,
-                hintStyle: TextStyle(fontFamily: 'Poppins')
+                hintStyle: TextStyle(
+                  fontFamily: 'Poppins', 
+                  color: theme.colorScheme.surfaceContainerHigh
+                )
               ),
             ),
           ),
@@ -173,7 +166,10 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
                 _roomNameController.clear();
               }
             },
-            child: const Icon(Icons.send_and_archive_rounded, color: Colors.grey),
+            child: Icon(
+              Icons.send_and_archive_rounded, 
+              color: theme.colorScheme.surfaceContainerHigh
+            ),
           ),
         ],
       ),

@@ -24,7 +24,7 @@ class CustomField extends StatelessWidget {
         fillColor: theme.inputDecorationTheme.fillColor,
         prefixIcon: Icon(customicon, color: theme.colorScheme.surfaceContainerHigh),
         hintText: hintText,
-        hintStyle: TextStyle(color: theme.inputDecorationTheme.hintStyle?.color),
+        hintStyle: TextStyle(color: theme.hintColor),
         border: InputBorder.none,
       ),
     );

@@ -1,6 +1,6 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'interceptors.dart';
@@ -8,31 +8,35 @@ import 'interceptors.dart';
 class DioClient {
   late final Dio dio;
   late final PersistCookieJar cookieJar;
+  final String baseUrl = 'http://192.168.1.15:3000';
 
   DioClient() {
-    dio = Dio(
-      BaseOptions(
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        responseType: ResponseType.json,
-        sendTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
-      ),
-    );
+    dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      responseType: ResponseType.json,
+      sendTimeout: const Duration(seconds: 40),
+      receiveTimeout: const Duration(seconds: 40),
+    ));
 
     _initCookieJar();
   }
 
   Future<void> _initCookieJar() async {
     final appDocDir = await getApplicationDocumentsDirectory();
-    cookieJar = PersistCookieJar(storage: FileStorage('${appDocDir.path}/.cookies/'));
+    final cookiePath = '${appDocDir.path}/.cookies/';
+    cookieJar = PersistCookieJar(storage: FileStorage(cookiePath));
 
-    dio.interceptors.addAll([
-      LoggerInterceptor(),
-      CookieManager(cookieJar),
-    ]);
+    dio.interceptors
+      .addAll([
+        LoggerInterceptor(),
+        CookieManager(cookieJar),
+        _AuthInterceptor(cookieJar, baseUrl),
+      ]);
   }
+
 
   Future<Response> get(
     String url, {
@@ -122,5 +126,28 @@ class DioClient {
     } catch (e) {
       rethrow;
     }
+  }
+}
+
+class _AuthInterceptor extends Interceptor {
+  final PersistCookieJar cookieJar;
+  final String baseUrl;
+
+  _AuthInterceptor(this.cookieJar, this.baseUrl);
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    if (options.uri.toString().startsWith(baseUrl)) {
+      final cookies = await cookieJar.loadForRequest(Uri.parse(baseUrl));
+
+      final authCookie = cookies.firstWhere(
+        (c) => c.name == 'Authorization' && c.value.isNotEmpty,
+        orElse: () => Cookie('Authorization', ''),
+      );
+
+      options.headers['Authorization'] = 'Bearer ${authCookie.value}';
+
+    }
+    super.onRequest(options, handler);
   }
 }

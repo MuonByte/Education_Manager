@@ -49,15 +49,14 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    //final borderspace = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
     final spacing = MediaQuery.of(context).size.height;
     final double iconspace = 20;
-    //String backgroundAsset = responsiveplatform(context);
 
     return Form(
       key: _formKey,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F7),
+        backgroundColor: theme.colorScheme.background,
         body: MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => ButtonStateCubit()),
@@ -65,12 +64,13 @@ class _RegisterState extends State<Register> {
           ],
           child: BlocListener<AuthStateCubit, AuthState>(
             listener: (context, state) {
+              if (state is Authenticated) {
                 showOtpDialog(
                   context,
                   _emailController.text,
                   isEmail: true,
                 );
-              if (state is Unauthenticated) {
+              } else if (state is Unauthenticated) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Registration failed. Please try again.")),
                 );
@@ -90,12 +90,10 @@ class _RegisterState extends State<Register> {
 
                       SizedBox(height: spacing * 0.07),
 
-                      const Text(
+                      Text(
                         'Create your\nAccount',
-                        style: TextStyle(
-                          fontSize: 32,
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
                           fontFamily: 'Poppins',
                         ),
                       ),
@@ -130,11 +128,10 @@ class _RegisterState extends State<Register> {
                         height: MediaQuery.of(context).size.height * 0.01,
                       ),
 
-                      const Center(
+                      Center(
                         child: Text(
                           'Continue With Accounts',
-                          style: TextStyle(
-                            color: Colors.grey,
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -142,7 +139,7 @@ class _RegisterState extends State<Register> {
 
                       SizedBox(height: spacing * 0.02),
 
-                      _otherRegister(iconspace),
+                      _otherRegister(iconspace, theme),
                     ],
                   ),
                 ),
@@ -193,13 +190,13 @@ class _RegisterState extends State<Register> {
   }
 
   Row _changeMethod(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           'Already Have An Account?',
-          style: TextStyle(
-            color: Colors.grey,
+          style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -212,11 +209,10 @@ class _RegisterState extends State<Register> {
               ),
             );
           },
-          child: const Text(
+          child: Text(
             ' Sign In',
-            style: TextStyle(
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
             ),
           ),
         ),
@@ -224,7 +220,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _otherRegister(double iconspace) {
+  Widget _otherRegister(double iconspace, ThemeData theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -241,11 +237,9 @@ class _RegisterState extends State<Register> {
 
         SocialButtons(
           mainIcon: Icons.phone_android_rounded,
-          gradColor1: Colors.white,
-          gradColor2: const Color.fromARGB(
-            255,112,112,112,
-          ),
-          mainColor: Colors.white,
+          gradColor1: theme.colorScheme.onSurface,
+          gradColor2: theme.colorScheme.surface,
+          mainColor: theme.colorScheme.onSurface,
         ),
       
       ],
@@ -253,11 +247,12 @@ class _RegisterState extends State<Register> {
   }
 
   Widget _registerButton(BuildContext context) {
+    final theme = Theme.of(context);
     return Builder(
       builder: (context) {
         return CustomButton(
           buttonText: 'Register',
-          backgroundColor: Colors.black,
+          backgroundColor: theme.colorScheme.primary,
           onPressed: () {
             if (_formKey.currentState != null && _formKey.currentState!.validate()) {
               context.read<AuthStateCubit>().signup(

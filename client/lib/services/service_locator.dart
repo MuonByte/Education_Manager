@@ -30,7 +30,7 @@ import 'package:client/core/network/dio_client.dart';
 
 final sl = GetIt.instance;
 
-void setupServiceLocator() {
+setupServiceLocator() {
 
   sl.registerLazySingleton<DioClient>(() => DioClient());
 

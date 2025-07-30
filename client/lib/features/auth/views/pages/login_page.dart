@@ -44,15 +44,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final borderspace = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
     final spacing = MediaQuery.of(context).size.height;
     final double iconspace = 20;
-    //String backgroundAsset = responsiveplatform(context);
 
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: theme.colorScheme.background,
         body: BlocProvider(
           create: (context) => ButtonStateCubit(),
           child: BlocListener<ButtonStateCubit, ButtonState>(
@@ -64,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               }
               if(state is ButtonFailureState){
-                var snackbar = SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.black,);
+                var snackbar = SnackBar(content: Text(state.errorMessage), backgroundColor: theme.colorScheme.error,);
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
             },
@@ -82,12 +81,10 @@ class _LoginPageState extends State<LoginPage> {
             
                       SizedBox(height: spacing * 0.07),
             
-                      const Text(
+                      Text(
                         'Login your\nAccount',
-                        style: TextStyle(
-                          fontSize: 32,
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
                           fontFamily: 'Poppins',
                         ),
                       ),
@@ -118,11 +115,10 @@ class _LoginPageState extends State<LoginPage> {
             
                       SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             
-                      const Center(
+                      Center(
                         child: Text(
                           'Continue With Accounts',
-                          style: TextStyle(
-                            color: Colors.grey,
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -130,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
             
                       SizedBox(height: spacing * 0.02),
             
-                      _otherLogin(iconspace),
+                      _otherLogin(iconspace, theme),
                     ],
                   ),
                 ),
@@ -143,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _forgetPassword(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: Row(
@@ -157,11 +154,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               );
             },
-            child: const Text(
+            child: Text(
               'Forget Password',
-              style: TextStyle(
+              style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
               ),
             ),
           ),
@@ -171,13 +167,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _changeMethods(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           'Dont Have An Account?',
-          style: TextStyle(
-            color: Colors.grey,
+          style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -190,11 +186,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           },
-          child: const Text(
+          child: Text(
             ' Sign Up',
-            style: TextStyle(
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
             ),
           ),
         ),
@@ -202,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _otherLogin(double iconspace) {
+  Widget _otherLogin(double iconspace, ThemeData theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -217,20 +212,21 @@ class _LoginPageState extends State<LoginPage> {
 
         SocialButtons(
           mainIcon: Icons.phone_android,
-          gradColor1: const Color.fromARGB(255, 233, 233, 233),
-          gradColor2: const Color.fromARGB(255, 112, 112, 112),
-          mainColor: const Color.fromARGB(255, 197, 197, 197),
+          gradColor1: theme.colorScheme.onSurface,
+          gradColor2: theme.colorScheme.surface,
+          mainColor: theme.colorScheme.onSurface,
         ),
       ],
     );
   }
 
   Widget _loginButton(BuildContext context) {
+    final theme = Theme.of(context);
     return Builder(
       builder: (context) {
         return CustomButton(
           buttonText: 'Login',
-          backgroundColor: Colors.black,
+          backgroundColor: theme.colorScheme.primary,
           onPressed: () {
             context.read<ButtonStateCubit>().excute(
               usecase: sl<LoginUsecase>(),

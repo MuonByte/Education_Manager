@@ -8,14 +8,14 @@ class CustomButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final Color backgroundColor; 
-  final ButtonStateCubit? buttonCubit; // New optional parameter
+  final ButtonStateCubit? buttonCubit;
 
   const CustomButton({
     super.key, 
     required this.buttonText, 
     required this.onPressed,
     required this.backgroundColor,
-    this.buttonCubit, // Initialize new parameter
+    this.buttonCubit,
   });
 
   @override
@@ -24,7 +24,7 @@ class CustomButton extends StatelessWidget {
       width: double.infinity,
       height: 60,
       child: BlocBuilder<ButtonStateCubit,ButtonState>(
-        bloc: buttonCubit, // Use the provided cubit, or null for default
+        bloc: buttonCubit,
         builder: (context, state) {
           if(state is ButtonLoadingState){
             return _loading(context);

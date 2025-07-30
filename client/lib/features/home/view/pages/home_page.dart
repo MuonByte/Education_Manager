@@ -2,6 +2,7 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/common/widgets/custom_navbar.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/common/widgets/theme_toggle_button.dart';
 import 'package:client/features/chat/view/pages/chat_room_display.dart';
 import 'package:client/features/organizer/view/pages/book_tracker_page.dart';
 
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final iconWidth = ResponsiveValue<double>(
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     ).value;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: theme.colorScheme.surfaceContainerLow,
       body: BlocProvider(
         create: (_) => ButtonStateCubit(),
         child: SafeArea(
@@ -57,6 +59,8 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     children: [
                       CustomBackButton(isAuth: true),
+                      Spacer(),
+                      ThemeToggleButton(),
                     ],
                   ),
 
@@ -66,35 +70,36 @@ class _HomePageState extends State<HomePage> {
                     'assets/icon/app_icon.png',
                     width: iconWidth,
                     fit: BoxFit.contain,
+                    color: theme.colorScheme.surfaceContainerHigh,
                   ),
 
                   SizedBox(height: screenHeight * 0.07),
 
-                  const Text(
+                  Text(
                     'Welcome to\nYour Education\nManager',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Poppins',
+                      fontSize: 30,
+                      color: theme.colorScheme.surfaceContainerHigh,
                     ),
                   ),
 
                   SizedBox(height: screenHeight * 0.02),
 
-                  const Text(
+                  Text(
                     'Start chatting with TutorAI now.\nYou can ask me anything.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
                       fontFamily: 'Poppins',
+                      color: theme.colorScheme.surfaceContainerHigh,
                     ),
                   ),
 
                   SizedBox(height: screenHeight * 0.1),
 
-                  _getStarted(),
+                  _getStarted(context, theme),
                 ],
               ),
             ),
@@ -108,7 +113,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _getStarted() {
+  Widget _getStarted(BuildContext context, ThemeData theme) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -120,7 +125,7 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(builder: (_) => const ChatRoomsPage()),
           );
         },
-        backgroundColor: Colors.black,
+        backgroundColor: theme.colorScheme.surfaceContainerHigh,
       ),
     );
   }

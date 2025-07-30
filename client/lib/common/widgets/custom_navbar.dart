@@ -117,11 +117,12 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       height: 90,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         border: Border(
           top: BorderSide(color: Colors.grey.shade400, width: 2),
         ),
@@ -145,7 +146,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 Icon(
                   items[index],
                   size: 29,
-                  color: isSelected ? Colors.black : Colors.grey,
+                  color: isSelected ? theme.colorScheme.surfaceContainerHigh : theme.colorScheme.surfaceContainerHigh,
                 ),
                 const SizedBox(height: 6),
                 SizedBox(
@@ -155,8 +156,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     duration: const Duration(milliseconds: 200),
                     opacity: isSelected ? 1 : 0,
                     child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHigh,
                         shape: BoxShape.circle,
                       ),
                     ),

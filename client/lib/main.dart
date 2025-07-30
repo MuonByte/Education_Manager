@@ -83,9 +83,9 @@ class MainApp extends StatelessWidget {
                   return const HomePage();
                 }
                 if (state is Unauthenticated) {
-                  return const Register();
+                  return const HomePage();
                 }
-                return const Register();
+                return const HomePage();
               },
             ),
             onGenerateRoute: AppRouter.onGenerateRoute,

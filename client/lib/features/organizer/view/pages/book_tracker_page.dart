@@ -1,4 +1,4 @@
-import 'package:client/common/widgets/custom_appbar.dart';
+import 'package:client/common/widgets/custom_header.dart';
 import 'package:client/features/organizer/data/model/books.dart';
 import 'package:client/features/organizer/view/widgets/custom_field.dart';
 import 'package:client/features/organizer/viewmodel/book_tracker_viewmodel.dart';
@@ -38,17 +38,25 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
     final spacing = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      appBar: CustomAppBar(),
+      backgroundColor: theme.colorScheme.surfaceContainerLow,
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            SizedBox(height: spacing*0.03,),
+            CustomHeader(title: 'Book Organizer',),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                color: theme.colorScheme.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(47, 0, 0, 0),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  )
+                ],
               ),
               child: Form(
                 key: formKey,
@@ -88,7 +96,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                         ),
                       ),
                       style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(theme.colorScheme.surfaceContainerHighest)
+                        backgroundColor: WidgetStatePropertyAll(theme.colorScheme.surfaceContainerLow)
                       ),
                     ),
 
@@ -113,7 +121,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                           bookSubjectController.clear();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                          backgroundColor: theme.colorScheme.surfaceContainerLow,
                           foregroundColor: theme.colorScheme.secondary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -126,10 +134,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                 ),
               ),
             ),
-
-
-            SizedBox(height: spacing * 0.03),
-
+            SizedBox(height: spacing* 0.01,),
             Expanded(
               child: booksBox.isEmpty
                   ? Center(child: Text('No books added yet.', style: theme.textTheme.bodyMedium))
@@ -142,7 +147,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           elevation: 3,
                           shadowColor: theme.colorScheme.secondary,
-                          color: theme.colorScheme.primaryFixedDim,
+                          color: theme.colorScheme.surfaceContainerLow,
                           child: InkWell(
                             onLongPress: () {
                               showUpdateStatusDialog(
@@ -173,9 +178,9 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                       Chip(
                                         label: Text(
                                           book.status,
-                                          style: TextStyle(color: theme.colorScheme.onPrimary),
+                                          style: TextStyle(color: theme.colorScheme.primaryContainer),
                                         ),
-                                        backgroundColor: theme.colorScheme.secondary.withOpacity(0.2),
+                                        backgroundColor: theme.colorScheme.surfaceContainerLow.withOpacity(0.2),
                                       ),
                                     ],
                                   ),

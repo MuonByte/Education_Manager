@@ -1,12 +1,10 @@
 import 'dart:io';
 
 class ChatRoomModel {
-  final bool newRoom;
   final String roomName;
   final String roomId;
 
   ChatRoomModel({
-    required this.newRoom,
     required this.roomName,
     required this.roomId,
   });
@@ -57,7 +55,26 @@ class CreateChatRoomParams {
   Map<String, dynamic> toMap() => {"roomName": roomName};
 }
 
-class FetchChatRoomsParams {}
+class FetchChatRoomsParams {
+  final String? id;
+  final String? title;
+
+  FetchChatRoomsParams({
+    this.id,
+    this.title,
+  });
+
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{};
+    if (id != null) {
+      map['id'] = id;
+    }
+    if (title != null) {
+      map['title'] = title;
+    }
+    return map;
+  }
+}
 
 class SendMessageParams {
   final String roomId;

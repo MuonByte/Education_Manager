@@ -18,8 +18,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.colorScheme.background,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => UserDisplayCubit()..displayUser()),
@@ -69,10 +70,10 @@ class ProfilePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _username(state.userEntity),
-                        _email(state.userEntity),
-                        _logout(context),
-                        _deleteAccount(context), // Add delete account button
+                        _username(state.userEntity, theme),
+                        _email(state.userEntity, theme),
+                        _logout(context, theme),
+                        _deleteAccount(context, theme), // Add delete account button
                       ],
                     ),
                   );
@@ -89,41 +90,35 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _username(UserEntity user) {
+  Widget _username(UserEntity user, ThemeData theme) {
     return Text(
       user.username,
-      style: const TextStyle(
-        fontFamily: 'Poppins', 
-        fontSize: 12
-      ),
+      style: theme.textTheme.bodyLarge,
     );
   }
 
-  Widget _email(UserEntity user) {
+  Widget _email(UserEntity user, ThemeData theme) {
     return Text(
       user.email,
-      style: const TextStyle(
-        fontFamily: 'Poppins', 
-        fontSize: 12
-      ),
+      style: theme.textTheme.bodyMedium,
     );
   }
 
-  Widget _logout(BuildContext context) {
+  Widget _logout(BuildContext context, ThemeData theme) {
     return CustomButton(
       buttonText: 'Logout',
-      backgroundColor: Colors.black38,
+      backgroundColor: theme.colorScheme.secondary.withOpacity(0.3),
       onPressed: () {
         context.read<ButtonStateCubit>().excute(usecase: sl<LogoutUsecase>());
       },
     );
   }
 
-  Widget _deleteAccount(BuildContext context) {
+  Widget _deleteAccount(BuildContext context, ThemeData theme) {
     final TextEditingController _passwordController = TextEditingController();
     return CustomButton(
       buttonText: 'Delete Account',
-      backgroundColor: Colors.red,
+      backgroundColor: theme.colorScheme.error,
       onPressed: () {
         showDialog(
           context: context,

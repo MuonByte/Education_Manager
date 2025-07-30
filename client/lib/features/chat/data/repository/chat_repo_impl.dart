@@ -17,7 +17,6 @@ class ChatRepositoryImpl extends ChatRepository {
       (err) => Left(err),
       (data) {
         final model = ChatRoomModel(
-          newRoom: true,
           roomName: data['roomName'],
           roomId: data['roomId'],
         );
@@ -33,7 +32,6 @@ class ChatRepositoryImpl extends ChatRepository {
       (err) => Left(err),
       (list) {
         final rooms = list.map((e) => ChatRoomModel(
-          newRoom: false,
           roomName: e['roomName'],
           roomId: e['roomId'],
         )).toList();

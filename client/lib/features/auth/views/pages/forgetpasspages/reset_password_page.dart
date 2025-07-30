@@ -39,12 +39,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final spacing = MediaQuery.of(context).size.height;
 
     return Form(
       key: _formKey,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F7),
+        backgroundColor: theme.colorScheme.background,
         body: BlocProvider(
           create: (context) => ButtonStateCubit(),
           child: BlocListener<ButtonStateCubit, ButtonState>(
@@ -74,12 +75,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
                       SizedBox(height: spacing * 0.07),
 
-                      const Text(
+                      Text(
                         'Reset Your\nPassword',
-                        style: TextStyle(
-                          fontSize: 32,
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
                           fontFamily: 'Poppins',
                         ),
                       ),
@@ -94,7 +93,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
                       SizedBox(height: spacing * 0.025),
 
-                      _resetbutton(context),
+                      _resetbutton(context, theme),
                     ],
                   ),
                 ),
@@ -106,12 +105,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  Widget _resetbutton(BuildContext context) {
+  Widget _resetbutton(BuildContext context, ThemeData theme) {
     return Builder(
       builder: (context) {
         return CustomButton(
           buttonText: 'Reset Password',
-          backgroundColor: Colors.black,
+          backgroundColor: theme.colorScheme.primary,
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               context.read<ButtonStateCubit>().excute(

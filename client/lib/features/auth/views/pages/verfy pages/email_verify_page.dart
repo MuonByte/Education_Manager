@@ -26,6 +26,7 @@ class _EmailVerifyPageState extends State<EmailVerifyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final spacing = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -61,12 +62,10 @@ class _EmailVerifyPageState extends State<EmailVerifyPage> {
         
                       SizedBox(height: spacing * 0.07),
         
-                      const Text(
+                      Text(
                         'Enter Your Email',
-                        style: TextStyle(
-                          fontSize: 32,
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
                           fontFamily: 'Poppins',
                         ),
                       ),
@@ -82,7 +81,7 @@ class _EmailVerifyPageState extends State<EmailVerifyPage> {
         
                       SizedBox(height: spacing * 0.04),
         
-                      _verifyButton(context, _formKey, _emailResetController),
+                      _verifyButton(context, _formKey, _emailResetController, theme),
                       
                     ],
                   ),
@@ -96,7 +95,7 @@ class _EmailVerifyPageState extends State<EmailVerifyPage> {
   }
 }
 
-Widget _verifyButton(BuildContext context, _formKey, TextEditingController _emailResetController) {
+Widget _verifyButton(BuildContext context, _formKey, TextEditingController _emailResetController, ThemeData theme) {
   return Builder(
     builder: (context) {
       return CustomButton(
@@ -112,7 +111,7 @@ Widget _verifyButton(BuildContext context, _formKey, TextEditingController _emai
             );
           }
         },
-        backgroundColor: Pallete.darkPrimary,
+        backgroundColor: theme.colorScheme.primary,
       );
     },
   );
