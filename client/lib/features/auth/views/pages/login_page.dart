@@ -6,6 +6,7 @@ import 'package:client/features/auth/views/pages/forgetpasspages/forget_password
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/features/auth/views/pages/verfy%20pages/verify_method_page.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F7),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: BlocProvider(
           create: (context) => ButtonStateCubit(),
           child: BlocListener<ButtonStateCubit, ButtonState>(
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
               }
               if(state is ButtonFailureState){
-                var snackbar = SnackBar(content: Text(state.errorMessage));
+                var snackbar = SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.black,);
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
             },

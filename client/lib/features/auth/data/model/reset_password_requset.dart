@@ -1,22 +1,16 @@
 class ResetPasswordRequestParameters {
   final String value;
-  final String method; 
-  final String otp;
-  final String newPassword;
+  final String code;
 
   ResetPasswordRequestParameters({
     required this.value,
-    required this.method,
-    required this.otp,
-    required this.newPassword,
+    required this.code,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'value': value,
-      'method': method,
-      'otp': otp,
-      'new_password': newPassword,
+      'code': code,
     };
   }
 }

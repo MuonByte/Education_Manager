@@ -1,5 +1,9 @@
 import 'package:client/core/usecase/usecase.dart';
+import 'package:client/features/auth/data/model/login_request.dart';
+import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/domain/usecases/get_user.dart';
+import 'package:client/features/auth/domain/usecases/login_usecase.dart';
+import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/domain/usecases/is_auth_usecase.dart';
 
@@ -23,4 +27,32 @@ class AuthStateCubit extends Cubit<AuthState> {
       emit(Unauthenticated());
     }
   }
+  Future<void> login(LoginRequestParameters params, LoginUsecase loginUsecase) async {
+    final result = await loginUsecase.call(param: params);
+
+    result.fold(
+      (failure) => emit(Unauthenticated()),
+      (responseMessage) {
+        if (responseMessage.contains("otp")) {
+          emit(NeedsVerification(responseMessage));
+        } else {
+          emit(Unauthenticated());
+        }
+      },
+    );
+  }
+  Future<void> signup(SignupRequestParameters params, SignupUsecases usecase) async {
+  final result = await usecase.call(param: params);
+
+  result.fold(
+    (failure) => emit(Unauthenticated()),
+    (response) {
+      if (response.statusCode == 201) {
+        emit(NeedsVerification("verify your email"));
+      } else {
+        emit(Unauthenticated());
+      }
+    },
+  );
+}
 }

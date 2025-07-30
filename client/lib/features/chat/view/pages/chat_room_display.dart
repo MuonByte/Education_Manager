@@ -126,7 +126,7 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
       ),
       child: Row(
         children: [
-          CustomBackButton(),
+          CustomBackButton(isAuth: true,),
           const SizedBox(width: 12),
           const Text(
             'Your Chat Rooms',

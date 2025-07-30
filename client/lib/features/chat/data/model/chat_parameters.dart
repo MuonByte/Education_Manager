@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class ChatRoomModel {
   final bool newRoom;
   final String roomName;
@@ -59,21 +61,21 @@ class FetchChatRoomsParams {}
 
 class SendMessageParams {
   final String roomId;
-  final String content;
-  final String? imageUrl;
+  final String? content;
+  final File? imageFile;
   final String userId;
 
   SendMessageParams({
     required this.roomId,
-    required this.content,
-    this.imageUrl,
+    this.content,
+    this.imageFile,
     required this.userId,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'content': content,
-      'imageUrl': imageUrl,
+      'imageUrl': imageFile?.path,
       'userId': userId,
     };
   }

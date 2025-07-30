@@ -3,11 +3,15 @@ import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
+import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/auth/views/pages/login_page.dart';
 import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/features/auth/views/pages/verfy%20pages/email_verify_page.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
+import 'package:client/features/auth/views/widgets/otp_dialog.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
 import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
@@ -54,19 +58,22 @@ class _RegisterState extends State<Register> {
       key: _formKey,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F7),
-        body: BlocProvider(
-          create: (context) => ButtonStateCubit(),
-          child: BlocListener<ButtonStateCubit, ButtonState>(
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => ButtonStateCubit()),
+            BlocProvider(create: (context) => AuthStateCubit(sl(), sl())),
+          ],
+          child: BlocListener<AuthStateCubit, AuthState>(
             listener: (context, state) {
-              if(state is ButtonSuccessState){
-                Navigator.pushReplacement(
-                  context, 
-                  MaterialPageRoute(builder: (context) => ProfilePage())
+                showOtpDialog(
+                  context,
+                  _emailController.text,
+                  isEmail: true,
                 );
-              }
-              if(state is ButtonFailureState){
-                var snackbar = SnackBar(content: Text(state.errorMessage));
-                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              if (state is Unauthenticated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Registration failed. Please try again.")),
+                );
               }
             },
             child: SafeArea(
@@ -252,23 +259,34 @@ class _RegisterState extends State<Register> {
           buttonText: 'Register',
           backgroundColor: Colors.black,
           onPressed: () {
-          if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-            context.read<ButtonStateCubit>().excute(
-              usecase: sl<SignupUsecases>(),
-              params: SignupRequestParameters(
-                email: _emailController.text,
-                password: _passwordController.text,
-                username: _nameController.text,
-              ),
-            );
-          } else {
-            context.read<ButtonStateCubit>().emit(
-              ButtonFailureState(errorMessage: "Please fill all fields correctly."),
-            );
-          }
-        },
+            if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+              context.read<AuthStateCubit>().signup(
+                SignupRequestParameters(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  username: _nameController.text,
+                ),
+                sl<SignupUsecases>(),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Please fill all fields correctly.")),
+              );
+            }
+          },
         );
       },
     );
   }
+}
+
+void showOtpDialog(BuildContext context, String contact, {required bool isEmail}) {
+  showDialog(
+    context: context,
+    builder: (context) => OtpDialog(
+      contact: contact,
+      isEmail: isEmail,
+      isFromRegister: true,
+    ),
+  );
 }

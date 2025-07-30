@@ -2,13 +2,13 @@ import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
-import 'package:client/features/chat/view/screens/camera.dart';
-import 'package:client/features/chat/view/widgets/add_your_image.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_state.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class ChatPage extends StatefulWidget {
   final ChatRoomModel room;
@@ -51,6 +51,22 @@ class _ChatPageState extends State<ChatPage> {
       _controller.clear();
     }
   }
+
+  void _sendImageMessage(File imageFile) {
+    final authState = context.read<AuthStateCubit>().state;
+    if (authState is Authenticated) {
+      final userId = authState.user.userId;
+
+      context.read<MessagesCubit>().sendMessage(
+        SendMessageParams(
+          roomId: widget.room.roomId,
+          imageFile: imageFile,
+          userId: userId!,
+        ),
+      );
+    }
+  }
+
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -118,21 +134,23 @@ class _ChatPageState extends State<ChatPage> {
                         ListTile(
                           leading: const Icon(Icons.photo),
                           title: const Text('Send Photo'),
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context, 
-                              MaterialPageRoute(builder: (context) => AddYourImage())
-                            );
+                          onTap: () async {
+                            final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                            if (pickedFile != null) {
+                              _sendImageMessage(File(pickedFile.path));
+                            }
+                            Navigator.pop(context);
                           },
                         ),
                         ListTile(
                           leading: const Icon(Icons.camera_alt),
                           title: const Text('Take Photo'),
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context, 
-                              MaterialPageRoute(builder: (context) => Camera())
-                            );
+                          onTap: () async {
+                            final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+                            if (pickedFile != null) {
+                              _sendImageMessage(File(pickedFile.path));
+                            }
+                            Navigator.pop(context);
                           },
                         ),
                       ],

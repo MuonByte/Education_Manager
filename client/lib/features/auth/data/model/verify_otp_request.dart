@@ -1,19 +1,13 @@
 class VerifyOtpRequest {
-  final String value;
-  final String method; 
-  final String otp;
+  final String code;
 
   VerifyOtpRequest({
-    required this.value,
-    required this.method,
-    required this.otp,
+    required this.code, 
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'value': value,
-      'method': method,
-      'otp': otp,
+      'code': code,
     };
   }
 }

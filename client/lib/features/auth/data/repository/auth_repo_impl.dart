@@ -12,7 +12,6 @@ import 'package:client/services/service_locator.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImplementation extends AuthRepository{
 
@@ -20,15 +19,11 @@ class AuthRepositoryImplementation extends AuthRepository{
   Future<Either> signup(SignupRequestParameters signupReq) async {
     Either result = await sl<AuthApiService>().signup(signupReq);
     return result.fold(
-      (error) {
-        return Left(error);
-      }, 
+      (error) => Left(error),
       (data) async {
         Response response = data;
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('token', response.data['token']);
         return Right(response);
-      }
+      },
     );
   }
   
@@ -79,15 +74,11 @@ class AuthRepositoryImplementation extends AuthRepository{
   Future<Either> login(LoginRequestParameters loginReq) async {
     Either result = await sl<AuthApiService>().login(loginReq);
     return result.fold(
-      (error) {
-        return Left(error);
-      }, 
+      (error) => Left(error),
       (data) async {
         Response response = data;
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('token', response.data['token']);
         return Right(response);
-      }
+      },
     );
   }
   

@@ -4,6 +4,9 @@ import 'package:client/features/auth/domain/entities/user_entity.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
 import 'package:client/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:client/features/auth/views/pages/login_page.dart';
+import 'package:client/features/profile/data/model/delete_account_request.dart';
+import 'package:client/features/profile/domain/usecases/delete_account_usecase.dart';
+import 'package:client/features/profile/viewmodel/bloc/delete_account_cubit.dart';
 import 'package:client/features/profile/viewmodel/bloc/user_display_cubit.dart';
 import 'package:client/features/profile/viewmodel/bloc/user_display_state.dart';
 import 'package:client/services/service_locator.dart';
@@ -21,16 +24,38 @@ class ProfilePage extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => UserDisplayCubit()..displayUser()),
           BlocProvider(create: (context) => ButtonStateCubit()),
+          BlocProvider(create: (context) => DeleteAccountCubit()), // Add DeleteAccountCubit
         ],
-        child: BlocListener<ButtonStateCubit, ButtonState>(
-          listener: (context, state) {
-            if(state is ButtonSuccessState) {
-              Navigator.pushReplacement(
-                context, 
-                MaterialPageRoute(builder: (context) => LoginPage())
-              );
-            }
-          },
+        child: MultiBlocListener( // Use MultiBlocListener for multiple listeners
+          listeners: [
+            BlocListener<ButtonStateCubit, ButtonState>(
+              listener: (context, state) {
+                if(state is ButtonSuccessState) {
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => LoginPage())
+                  );
+                }
+              },
+            ),
+            BlocListener<DeleteAccountCubit, ButtonState>( // Listener for DeleteAccountCubit
+              listener: (context, state) {
+                if (state is ButtonSuccessState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Account deleted successfully!")),
+                  );
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => LoginPage())
+                  );
+                } else if (state is ButtonFailureState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Failed to delete account: ${state.errorMessage}")),
+                  );
+                }
+              },
+            ),
+          ],
           child: Center(
             child: BlocBuilder<UserDisplayCubit, UserDisplayState>(
               builder: (context, state) {
@@ -47,6 +72,7 @@ class ProfilePage extends StatelessWidget {
                         _username(state.userEntity),
                         _email(state.userEntity),
                         _logout(context),
+                        _deleteAccount(context), // Add delete account button
                       ],
                     ),
                   );
@@ -89,6 +115,63 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.black38,
       onPressed: () {
         context.read<ButtonStateCubit>().excute(usecase: sl<LogoutUsecase>());
+      },
+    );
+  }
+
+  Widget _deleteAccount(BuildContext context) {
+    final TextEditingController _passwordController = TextEditingController();
+    return CustomButton(
+      buttonText: 'Delete Account',
+      backgroundColor: Colors.red,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: Text('Confirm Account Deletion'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Are you sure you want to delete your account? This action cannot be undone.'),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your password',
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Confirm'),
+                  onPressed: () {
+                    if (_passwordController.text.isNotEmpty) {
+                      context.read<DeleteAccountCubit>().deleteAccount(
+                            sl<DeleteAccountUsecase>(),
+                            DeleteAccountRequestParameters(
+                              password: _passwordController.text,
+                            ),
+                          );
+                      Navigator.of(dialogContext).pop();
+                    } else {
+                      ScaffoldMessenger.of(dialogContext).showSnackBar(
+                        SnackBar(content: Text('Please enter your password.')),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }

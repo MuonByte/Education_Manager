@@ -13,6 +13,7 @@ class AppTheme {
       surface: Pallete.lightPrimary,
       surfaceContainerHighest: const Color.fromARGB(255, 182, 182, 182), 
       surfaceContainerHigh: const Color.fromARGB(255, 80, 80, 80),
+      surfaceContainerLow: Colors.white,
       surfaceContainer: Pallete.ButtonFillColorD1,
       primary: Pallete.lightPrimary, 
       inversePrimary: Pallete.lightPrimary,
@@ -52,6 +53,10 @@ class AppTheme {
       ),
     ),
 
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.black
+    ),
+
   );
   
   static final darkTheme = ThemeData(
@@ -64,6 +69,7 @@ class AppTheme {
       surface: Pallete.darkPrimary,
       surfaceContainerHighest: const Color.fromARGB(255, 36, 41, 43),  
       surfaceContainerHigh: const Color.fromARGB(255, 245, 245, 245),
+      surfaceContainerLow: const Color.fromARGB(255, 35, 38, 39),
       surfaceContainer: Pallete.ButtonFillColorL1,
       primary: Pallete.lightPrimary,
       secondary: const Color.fromARGB(255, 219, 219, 219), 
@@ -101,6 +107,10 @@ class AppTheme {
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(Pallete.ButtonFillColorL1),
       ),
+    ),
+
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.black
     ),
 
   );

@@ -7,6 +7,7 @@ import 'package:client/features/auth/data/model/verify_otp_request.dart';
 import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/verifyotp_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/reset_password_page.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/services/service_locator.dart';
 
 import 'package:flutter/material.dart';
@@ -15,7 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OtpDialog extends StatefulWidget {
   final String contact;
   final bool isEmail;
-  const OtpDialog({super.key, required this.contact, required this.isEmail});
+  final bool isFromRegister;
+  const OtpDialog({super.key, required this.contact, required this.isEmail, this.isFromRegister = false,});
 
   @override
   _OtpDialogState createState() => _OtpDialogState();
@@ -25,6 +27,7 @@ class _OtpDialogState extends State<OtpDialog> {
   final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   String get _enteredOtp => _controllers.map((controller) => controller.text).join();
+
 
   final _verifyCubit = ButtonStateCubit();
   final _resendCubit = ButtonStateCubit();
@@ -121,17 +124,23 @@ class _OtpDialogState extends State<OtpDialog> {
                 bloc: _verifyCubit,
                 listener: (context, state) {
                   if (state is ButtonSuccessState) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ResetPasswordPage(
-                          value: widget.contact,
-                          method: widget.isEmail ? 'email' : 'phone',
-                          otp: _enteredOtp,
-                        ),
-                      ),
+                    if (widget.isFromRegister) {
+                      Navigator.pushReplacement(
+                        context, 
+                      MaterialPageRoute(builder: (context) => HomePage())
                     );
-                  } else if (state is ButtonFailureState) {
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResetPasswordPage(
+                            value: widget.contact,
+                            code: _enteredOtp,
+                          ),
+                        ),
+                      );
+                    }
+                  }else if (state is ButtonFailureState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(state.errorMessage)),
                     );
@@ -139,14 +148,13 @@ class _OtpDialogState extends State<OtpDialog> {
                 },
                 child: CustomButton(
                   buttonText: 'Verify',
+                  buttonCubit: _verifyCubit,
                   onPressed: () {
-                    if (_enteredOtp.length == 6) {
+                    if (_enteredOtp.toString().length == 6) {
                       _verifyCubit.excute(
                         usecase: sl<VerifyotpUsecase>(),
                         params: VerifyOtpRequest(
-                          value: widget.contact,
-                          method: widget.isEmail ? 'email' : 'phone',
-                          otp: _enteredOtp,
+                          code: _enteredOtp,
                         ),
                       );
                     } else {
@@ -176,6 +184,7 @@ class _OtpDialogState extends State<OtpDialog> {
                 },
                 child: CustomButton(
                   buttonText: 'Send Again',
+                  buttonCubit: _resendCubit,
                   onPressed: () {
                     _resendCubit.excute(
                       usecase: sl<SendOtpUsecase>(),

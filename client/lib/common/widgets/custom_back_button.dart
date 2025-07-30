@@ -1,4 +1,5 @@
 import 'package:client/core/theme/pallete.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomBackButton extends StatelessWidget {
@@ -7,9 +8,10 @@ class CustomBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       child: PhysicalModel(
-        color: Pallete.WhiteColor,
+        color: theme.colorScheme.surfaceContainerLow,
         shadowColor: Colors.black.withOpacity(0.4),
         elevation: 6,
         borderRadius: BorderRadius.circular(18),
@@ -23,7 +25,10 @@ class CustomBackButton extends StatelessWidget {
               } else {
                 final currentRoute = ModalRoute.of(context)?.settings.name;
                 if (currentRoute != '/home' && currentRoute != '/chat') {
-                  Navigator.pushReplacementNamed(context, '/home');
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => HomePage())
+                  );
                 }
               }
             }

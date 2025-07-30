@@ -47,9 +47,8 @@ class ChatRepositoryImpl extends ChatRepository {
     try {
       final messages = await _chatApiService.fetchMessages(params.roomId);
       return Right(messages);
-    } 
-    catch (e) {
-      return Left('Failed to fetch messages');
+    } on DioException catch (e) {
+      return Left(e.response?.data['message'] ?? 'Failed to fetch messages');
     }
   }
 
@@ -58,9 +57,8 @@ class ChatRepositoryImpl extends ChatRepository {
     try {
       final message = await _chatApiService.sendMessage(params);
       return Right(message);
-    } 
-    on DioException catch (e) {
-      return Left('Failed to send message $e');
+    } on DioException catch (e) {
+      return Left(e.response?.data['message'] ?? 'Failed to send message');
     }
   }
 

@@ -21,6 +21,9 @@ import 'package:client/features/chat/domain/usecases/fetch_messages_usecase.dart
 import 'package:client/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
+import 'package:client/features/profile/data/repositories/delete_account_repository_impl.dart';
+import 'package:client/features/profile/domain/repositories/delete_account_repository.dart';
+import 'package:client/features/profile/domain/usecases/delete_account_usecase.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:client/core/network/dio_client.dart';
@@ -29,14 +32,14 @@ final sl = GetIt.instance;
 
 void setupServiceLocator() {
 
-  sl.registerSingleton<DioClient>(DioClient());
+  sl.registerLazySingleton<DioClient>(() => DioClient());
 
   sl.registerSingleton<AuthApiService>(
     AuthApiServiceImplementation()
   );
 
   sl.registerSingleton<AuthLocalService>(
-    AuthLocalServiceImplementation()
+    AuthLocalServiceImplementation(sl<DioClient>())
   );
 
   sl.registerSingleton<AuthRepository>(
@@ -116,5 +119,14 @@ void setupServiceLocator() {
     fetchMessagesUsecase: sl(),
   ));
 
+  sl.registerSingleton<DeleteAccountRepository>(
+    DeleteAccountRepositoryImpl(sl<DioClient>())
+  );
+
+  sl.registerSingleton<DeleteAccountUsecase>(
+    DeleteAccountUsecase(sl<DeleteAccountRepository>())
+  );
+
   sl.registerLazySingleton(() => AuthStateCubit(sl(), sl()));
+
 }

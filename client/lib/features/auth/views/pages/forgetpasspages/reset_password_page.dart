@@ -5,6 +5,7 @@ import 'package:client/features/auth/data/model/reset_password_requset.dart';
 import 'package:client/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
+import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   final String value;
-  final String method; 
-  final String otp;
+  final String code;
 
   const ResetPasswordPage({
     super.key,
     required this.value,
-    required this.method,
-    required this.otp,
+    required this.code,
   });
 
   @override
@@ -28,7 +27,7 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _resetPasswordController = TextEditingController();
-  final _cResetPasswordController = TextEditingController();
+  //final _cResetPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
@@ -53,7 +52,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               if(state is ButtonSuccessState){
                 Navigator.pushReplacement(
                   context, 
-                  MaterialPageRoute(builder: (context) => ProfilePage())
+                  MaterialPageRoute(builder: (context) => HomePage())
                 );
               }
               if(state is ButtonFailureState){
@@ -119,9 +118,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 usecase: sl<ResetPasswordUsecase>(),
                 params: ResetPasswordRequestParameters(
                   value: widget.value,
-                  method: widget.method,
-                  otp: widget.otp,
-                  newPassword: _resetPasswordController.text,
+                  code: widget.code,
                 ),
               );
             }

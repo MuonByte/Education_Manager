@@ -11,3 +11,9 @@ class Authenticated extends AuthState {
 }
 
 class Unauthenticated extends AuthState {}
+
+class NeedsVerification extends AuthState {
+  final String message;
+
+  NeedsVerification(this.message);
+}
