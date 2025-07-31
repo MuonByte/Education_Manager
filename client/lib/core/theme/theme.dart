@@ -6,7 +6,6 @@ class AppTheme {
   static final lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    primarySwatch: Colors.blueGrey,
     scaffoldBackgroundColor: Pallete.backgroundColorL,
     hintColor: Pallete.textColor2L,
 
@@ -15,6 +14,7 @@ class AppTheme {
       surfaceContainerHighest: const Color.fromARGB(255, 182, 182, 182), 
       surfaceContainerHigh: Pallete.ButtonFillColorD1,
       surfaceContainerLow: Colors.white,
+      surfaceContainerLowest: Colors.white,
       surfaceContainer: Pallete.ButtonFillColorD1,
       primary: Pallete.lightPrimary, 
       inversePrimary: const Color.fromARGB(255, 19, 19, 19),
@@ -58,7 +58,6 @@ class AppTheme {
   static final darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    primarySwatch: Colors.grey,
     scaffoldBackgroundColor: Pallete.backgroundColorD,
 
     colorScheme: ColorScheme.dark(
@@ -66,6 +65,7 @@ class AppTheme {
       surfaceContainerHighest: const Color.fromARGB(255, 36, 41, 43),  
       surfaceContainerHigh: const Color.fromARGB(255, 245, 245, 245),
       surfaceContainerLow: const Color.fromARGB(255, 25, 27, 27),
+      surfaceContainerLowest: const Color.fromARGB(255, 20, 18, 18),
       surfaceContainer: Pallete.ButtonFillColorL1,
       primary: Pallete.lightPrimary,
       secondary: const Color.fromARGB(255, 219, 219, 219), 

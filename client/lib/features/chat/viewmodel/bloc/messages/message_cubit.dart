@@ -26,20 +26,38 @@ class MessagesCubit extends Cubit<MessagesState> {
   }
 
   Future<void> sendMessage(SendMessageParams params) async {
-    final result = await sendMessageUsecase(param: params);
+  final result = await sendMessageUsecase(param: params);
 
-    result.fold(
-      (error) => emit(MessagesError(error)),
-      (message) {
-        final currentState = state;
-        if (currentState is MessagesLoaded) {
-          final updatedMessages = List<MessageModel>.from(currentState.messages)
-            ..add(message);
-          emit(MessagesLoaded(messages: updatedMessages));
-        } else {
-          emit(MessagesLoaded(messages: [message]));
-        }
-      },
-    );
-  }
+  result.fold(
+    (error) => emit(MessagesError(error)),
+    (message) async {
+      final userMsg = MessageModel(userMessage: message.userMessage);
+      final aiMsg = MessageModel(aIMessage: message.aIMessage);
+
+      final currentState = state;
+      if (currentState is MessagesLoaded) {
+        final updatedMessages = List<MessageModel>.from(currentState.messages)
+          ..add(userMsg);
+
+        emit(MessagesLoaded(messages: updatedMessages));
+
+        Future.delayed(const Duration(seconds: 1), () {
+          final moreMessages = List<MessageModel>.from(updatedMessages)
+            ..add(aiMsg);
+          emit(MessagesLoaded(messages: moreMessages));
+        });
+      } else {
+
+        emit(MessagesLoaded(messages: [userMsg]));
+
+        Future.delayed(const Duration(seconds: 1), () {
+          emit(MessagesLoaded(messages: [userMsg, aiMsg]));
+        });
+      }
+    },
+  );
+}
+
+
+
 }

@@ -5,7 +5,7 @@ import 'package:client/core/theme/pallete.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/send_otp_request.dart';
 import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
-import 'package:client/features/auth/views/widgets/otp_dialog.dart';
+import 'package:client/features/auth/views/pages/otp_dialog.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/services/service_locator.dart';

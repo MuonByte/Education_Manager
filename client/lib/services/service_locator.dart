@@ -2,6 +2,7 @@ import 'package:client/features/auth/data/repository/auth_repo_impl.dart';
 import 'package:client/features/auth/data/source/auth_api_service.dart';
 import 'package:client/features/auth/data/source/auth_local_service.dart';
 import 'package:client/features/auth/domain/repository/auth_repo.dart';
+import 'package:client/features/auth/domain/usecases/request_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/get_user.dart';
 import 'package:client/features/auth/domain/usecases/is_auth_usecase.dart';
@@ -21,9 +22,14 @@ import 'package:client/features/chat/domain/usecases/fetch_messages_usecase.dart
 import 'package:client/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/chat_room_viewmodel.dart';
+import 'package:client/features/organizer/viewmodel/project_tracker_viewmodel.dart';
+import 'package:client/features/organizer/viewmodel/video_tracker_viewmodel.dart';
+import 'package:client/features/organizer/viewmodel/services/projects_service.dart';
+import 'package:client/features/organizer/viewmodel/services/videos_service.dart';
 import 'package:client/features/profile/data/repositories/delete_account_repository_impl.dart';
 import 'package:client/features/profile/domain/repositories/delete_account_repository.dart';
 import 'package:client/features/profile/domain/usecases/delete_account_usecase.dart';
+import 'package:client/services/auth_storage_service.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:client/core/network/dio_client.dart';
@@ -31,8 +37,6 @@ import 'package:client/core/network/dio_client.dart';
 final sl = GetIt.instance;
 
 setupServiceLocator() {
-
-  sl.registerLazySingleton<DioClient>(() => DioClient());
 
   sl.registerSingleton<AuthApiService>(
     AuthApiServiceImplementation()
@@ -111,6 +115,8 @@ setupServiceLocator() {
       fetchChatRoomsUsecase: sl<FetchChatRoomsUsecase>(),
       createChatRoomUsecase: sl<CreateChatRoomUsecase>(),
       deleteChatRoomUsecase: sl<DeleteChatRoomUsecase>(),
+      sendMessageUsecase: sl<SendMessageUsecase>(),
+      authService: sl<AuthLocalService>(),
     ),
   );
 
@@ -127,6 +133,18 @@ setupServiceLocator() {
     DeleteAccountUsecase(sl<DeleteAccountRepository>())
   );
 
-  sl.registerLazySingleton(() => AuthStateCubit(sl(), sl()));
+  sl.registerLazySingleton<AuthStorageService>(() => AuthStorageService());
+
+  sl.registerLazySingleton(() => AuthStateCubit(sl(), sl(), sl()));
+
+  sl.registerLazySingleton<ProjectsService>(() => ProjectsService());
+  sl.registerLazySingleton<VideosService>(() => VideosService());
+
+  sl.registerFactory<ProjectTrackerViewModel>(() => ProjectTrackerViewModel());
+  sl.registerFactory<VideoTrackerViewModel>(() => VideoTrackerViewModel());
+
+  sl.registerLazySingleton(() => RequestOtpUsecase(sl<AuthRepository>()));
+
+
 
 }

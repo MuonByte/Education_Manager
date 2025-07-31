@@ -4,8 +4,9 @@ import 'package:client/common/widgets/custom_button.dart';
 import 'package:client/core/theme/pallete.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/send_otp_request.dart';
+import 'package:client/features/auth/domain/usecases/request_otp_usecase.dart';
 import 'package:client/features/auth/domain/usecases/send_otp_usecase.dart';
-import 'package:client/features/auth/views/widgets/otp_dialog.dart';
+import 'package:client/features/auth/views/pages/otp_dialog.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/services/service_locator.dart';
@@ -27,8 +28,10 @@ class _EmailResetPageState extends State<EmailResetPage> {
   @override
   Widget build(BuildContext context) {
     final spacing = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: theme.colorScheme.surfaceContainerLowest,
       body: Form(
         key: _formKey,
         child: BlocProvider(
@@ -61,12 +64,12 @@ class _EmailResetPageState extends State<EmailResetPage> {
         
                       SizedBox(height: spacing * 0.07),
         
-                      const Text(
+                      Text(
                         'Enter Your Email',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w800,
-                          color: Colors.black87,
+                          color: theme.colorScheme.surfaceContainer,
                           fontFamily: 'Poppins',
                         ),
                       ),
@@ -97,6 +100,7 @@ class _EmailResetPageState extends State<EmailResetPage> {
 }
 
 Widget _resetPassButton(BuildContext context, _formKey, TextEditingController _emailResetController) {
+  final theme = Theme.of(context);
   return Builder(
     builder: (context) {
       return CustomButton(
@@ -104,15 +108,14 @@ Widget _resetPassButton(BuildContext context, _formKey, TextEditingController _e
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             context.read<ButtonStateCubit>().excute(
-              usecase: sl<SendOtpUsecase>(),
+              usecase: sl<RequestOtpUsecase>(),
               params: SendOtpRequestParameters(
                 value: _emailResetController.text,
-                method: 'email',
               ),
             );
           }
         },
-        backgroundColor: Pallete.darkPrimary,
+        backgroundColor: theme.colorScheme.surfaceContainer,
       );
     },
   );

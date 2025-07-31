@@ -20,54 +20,49 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Poppins',
         fontWeight: FontWeight.w600,
+        color: theme.colorScheme.surfaceContainer
       ),
       decoration: InputDecoration(
         isDense: false,
         contentPadding: const EdgeInsets.symmetric(vertical: 20),
         filled: true,
-        fillColor: const Color.fromARGB(66, 226, 226, 226),
+        fillColor: theme.colorScheme.surfaceContainerLow,
 
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 20, right: 12),
-          child: Icon(prefixIcon),
+          child: Icon(prefixIcon, color: theme.colorScheme.surfaceContainer,),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
 
         suffixIcon: suffixIconWidget,
 
         hintText: hintText,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontFamily: 'Poppins',
+          color: theme.colorScheme.surfaceContainer
         ),
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Colors.black,
+          borderSide: BorderSide(
+            color: theme.colorScheme.surfaceContainer,
             width: 2,
-          ),
-        ),
-
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Colors.white,
-            width: 0,
           ),
         ),
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 0, 0, 0),
+          borderSide: BorderSide(
+            color: theme.colorScheme.surfaceContainer,
             width: 2,
           ),
         ),

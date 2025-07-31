@@ -1,10 +1,10 @@
 class SendOtpRequestParameters {
   final String value;
-  final String method;
+  final String? method;
 
   SendOtpRequestParameters({
     required this.value,
-    required this.method,
+    this.method,
   });
 
   Map<String, dynamic> toMap() {

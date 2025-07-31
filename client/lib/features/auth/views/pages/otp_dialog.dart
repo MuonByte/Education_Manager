@@ -59,7 +59,7 @@ class _OtpDialogState extends State<OtpDialog> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: theme.colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -72,7 +72,7 @@ class _OtpDialogState extends State<OtpDialog> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-              Text('Verify', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text('Verify', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,)),
               SizedBox(height: 8),
               Text(
                 'We Have Sent Code To Your Given Contact Info',
@@ -164,7 +164,7 @@ class _OtpDialogState extends State<OtpDialog> {
                       );
                     }
                   },
-                  backgroundColor: theme.colorScheme.primary,
+                  backgroundColor: theme.colorScheme.surfaceContainer,
                 ),
               ),
 

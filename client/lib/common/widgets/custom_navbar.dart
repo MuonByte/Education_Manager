@@ -32,82 +32,87 @@ class _CustomNavBarState extends State<CustomNavBar> {
     {'icon': Icons.video_collection_rounded, 'label': 'Videos', 'route': '/video_organizer'},
   ];
 
-  void _showSubItemsOverlay(BuildContext context, Offset position) {
-  _hoveredIndex = null;
+void _showSubItemsOverlay(BuildContext context, Offset position) {
+  _removeOverlay();
 
   _overlayEntry = OverlayEntry(
     builder: (context) {
-      return Positioned(
-        left: position.dx - 60,
-        bottom: 100,
-        child: Material(
-          color: Colors.transparent,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              int index = (-details.localPosition.dy / 50).floor();
-              if (index >= 0 && index < subItems.length) {
-                setState(() => _hoveredIndex = index);
-              }
-            },
-            onPanEnd: (_) {
-              if (_hoveredIndex != null) {
-                final selected = subItems[_hoveredIndex!];
-                Navigator.of(context).pushNamed(selected['route']);
-              }
-              _removeOverlay();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(subItems.length, (i) {
-                final selected = _hoveredIndex == i;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  width: 120,
-                  height: 50,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  margin: const EdgeInsets.symmetric(vertical: 3),
-                  decoration: BoxDecoration(
-                    color: selected ? Colors.black.withOpacity(0.85) : Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        subItems[i]['icon'],
-                        size: 22,
-                        color: selected ? Colors.white : Colors.black,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        subItems[i]['label'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: selected ? Colors.white : Colors.black,
-                          fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-                          fontFamily: selected ? 'Poppins' : 'Poppins',
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+      return Stack(
+        children: [
+
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _removeOverlay,
+              behavior: HitTestBehavior.translucent,
+              child: const SizedBox.expand(),
             ),
           ),
-        ),
+
+          Positioned(
+            left: position.dx - 60,
+            bottom: 100,
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(subItems.length, (i) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(subItems[i]['route']);
+                      _removeOverlay();
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      width: 120,
+                      height: 50,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            subItems[i]['icon'],
+                            size: 22,
+                            color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            subItems[i]['label'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ],
       );
     },
   );
 
   Overlay.of(context).insert(_overlayEntry!);
 }
+
+
 
   void _removeOverlay() {
     _hoveredIndex = null;
@@ -122,7 +127,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
       width: double.infinity,
       height: 90,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: theme.colorScheme.surfaceContainerLow,
         border: Border(
           top: BorderSide(color: Colors.grey.shade400, width: 2),
         ),
@@ -131,11 +136,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(items.length, (index) {
           final isSelected = index == widget.currentIndex;
+
           return GestureDetector(
-            onTap: () => widget.onTap(index),
-            onLongPressStart: (details) {
+            onTapDown: (details) {
               if (index == 1) {
                 _showSubItemsOverlay(context, details.globalPosition);
+              } 
+              else {
+                widget.onTap(index);
               }
             },
             behavior: HitTestBehavior.opaque,
@@ -146,7 +154,9 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 Icon(
                   items[index],
                   size: 29,
-                  color: isSelected ? theme.colorScheme.surfaceContainerHigh : theme.colorScheme.surfaceContainerHigh,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.surfaceContainerHigh
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 const SizedBox(height: 6),
                 SizedBox(
@@ -157,7 +167,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     opacity: isSelected ? 1 : 0,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHigh,
+                        color: Theme.of(context).colorScheme.surfaceContainerHigh,
                         shape: BoxShape.circle,
                       ),
                     ),

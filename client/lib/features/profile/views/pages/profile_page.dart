@@ -20,14 +20,14 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => UserDisplayCubit()..displayUser()),
           BlocProvider(create: (context) => ButtonStateCubit()),
-          BlocProvider(create: (context) => DeleteAccountCubit()), // Add DeleteAccountCubit
+          BlocProvider(create: (context) => DeleteAccountCubit()),
         ],
-        child: MultiBlocListener( // Use MultiBlocListener for multiple listeners
+        child: MultiBlocListener( 
           listeners: [
             BlocListener<ButtonStateCubit, ButtonState>(
               listener: (context, state) {
@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
                 }
               },
             ),
-            BlocListener<DeleteAccountCubit, ButtonState>( // Listener for DeleteAccountCubit
+            BlocListener<DeleteAccountCubit, ButtonState>(
               listener: (context, state) {
                 if (state is ButtonSuccessState) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                         _username(state.userEntity, theme),
                         _email(state.userEntity, theme),
                         _logout(context, theme),
-                        _deleteAccount(context, theme), // Add delete account button
+                        _deleteAccount(context, theme), 
                       ],
                     ),
                   );

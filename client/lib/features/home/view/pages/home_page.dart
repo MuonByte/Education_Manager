@@ -24,9 +24,10 @@ class _HomePageState extends State<HomePage> {
     if (index == 2) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatRoomsPage()));
     }
-    if (index == 1) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BookTrackerPage()));
-    } 
+
+    if(index == 4) {
+
+    }
     else {
       setState(() => _currentIndex = index);
     }

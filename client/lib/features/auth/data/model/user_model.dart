@@ -4,18 +4,21 @@ class UserModel {
   final String? userId;
   final String? email;
   final String? username;
+  final bool? isVerified;
 
   UserModel({
     required this.email, 
     required this.username, 
-    required this.userId
+    required this.userId,
+    this.isVerified
   });
 
   factory UserModel.fromMap(Map<String,dynamic> map) {
     return UserModel(
       userId : map['userId'], 
       email: map['email'], 
-      username: map['username']
+      username: map['username'],
+      isVerified: map['isVerified'] ?? false,
     );
   }
 }
@@ -30,6 +33,7 @@ extension UserXModel on UserModel {
       userId: userId ?? '',
       email: email ?? '',
       username: username ?? '',
+      isVerified: isVerified ?? false,
     );
   }
 }

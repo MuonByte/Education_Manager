@@ -17,6 +17,7 @@ abstract class AuthApiService {
   Future<Either> sendOtp(SendOtpRequestParameters otpReq);
   Future<Either> resetPassword(ResetPasswordRequestParameters param);
   Future<Either> verifyOtp(VerifyOtpRequest param);
+  Future<Either> requestOtp(SendOtpRequestParameters otpReq);
 }
 
 class AuthApiServiceImplementation extends AuthApiService {
@@ -51,6 +52,20 @@ class AuthApiServiceImplementation extends AuthApiService {
         data: loginReq.toMap(),
       );
       return Right(response);
+    } 
+    on DioException catch (e) {
+      return Left(e.response?.data['message'] ?? 'An error occurred');
+    }
+  }
+
+  @override
+  Future<Either> requestOtp(SendOtpRequestParameters otpReq) async {
+    try {
+      final response = await sl<DioClient>().get(
+        ApiUrls.gforgetPassURL,
+        queryParameters: {'email': otpReq.value},
+      );
+      return Right(response);
     } on DioException catch (e) {
       return Left(e.response?.data['message'] ?? 'An error occurred');
     }
@@ -60,7 +75,7 @@ class AuthApiServiceImplementation extends AuthApiService {
   Future<Either> sendOtp(SendOtpRequestParameters otpReq) async {
     try {
       final response = await sl<DioClient>().post(
-        ApiUrls.forgetPassURL,
+        ApiUrls.gforgetPassURL,
         data: otpReq.toMap(),
       );
       return Right(response);

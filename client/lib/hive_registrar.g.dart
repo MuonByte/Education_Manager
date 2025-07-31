@@ -4,18 +4,24 @@
 
 import 'package:hive_ce/hive.dart';
 import 'package:client/features/organizer/data/model/books.dart';
+import 'package:client/features/organizer/data/model/project.dart';
 import 'package:client/features/organizer/data/model/user.dart';
+import 'package:client/features/organizer/data/model/video.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(BooksAdapter());
+    registerAdapter(ProjectAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(VideoAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(BooksAdapter());
+    registerAdapter(ProjectAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(VideoAdapter());
   }
 }

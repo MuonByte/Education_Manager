@@ -4,6 +4,8 @@ import 'package:client/features/chat/view/pages/chat_room_display.dart';
 import 'package:client/features/auth/views/pages/register_page.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/features/organizer/view/pages/book_tracker_page.dart';
+import 'package:client/features/organizer/view/pages/project_tracker_page.dart';
+import 'package:client/features/organizer/view/pages/video_tracker_page.dart';
 
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,12 @@ class AppRouter {
 
       case '/book_organizer':
         return MaterialPageRoute(builder: (_) => BookTrackerPage());
+
+      case '/project_organizer':
+        return MaterialPageRoute(builder: (_) => ProjectTrackerPage());
+
+      case '/video_organizer':
+        return MaterialPageRoute(builder: (_) => VideoTrackerPage());
 
       case '/chat-page':
         final args = settings.arguments;

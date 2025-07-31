@@ -24,8 +24,10 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final spacing = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: theme.colorScheme.surfaceContainerLowest,
       body: BlocProvider(
         create: (context) => ButtonStateCubit(),
         child: BlocListener<ButtonStateCubit, ButtonState>(
@@ -55,22 +57,22 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
                     SizedBox(height: spacing * 0.07),
 
-                    const Text(
+                    Text(
                       'Forget Password',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w800,
-                        color: Colors.black87,
+                        color: theme.colorScheme.surfaceContainer,
                         fontFamily: 'Poppins',
                       ),
                     ),
 
-                    const Text(
+                    Text(
                       'Select which contact details should we use to reset your password',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w200,
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: theme.colorScheme.surfaceContainer,
                         fontFamily: 'Poppins',
                       ),
                     ),
@@ -118,6 +120,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 }
 
 Widget _nextButton(BuildContext context, String selectedMethod) {
+  final theme = Theme.of(context);
   return CustomButton(
     buttonText: 'Next',
     onPressed: () {
@@ -137,6 +140,6 @@ Widget _nextButton(BuildContext context, String selectedMethod) {
         );
       }
     },
-    backgroundColor: Pallete.darkPrimary,
+    backgroundColor: theme.colorScheme.surfaceContainer,
   );
 }

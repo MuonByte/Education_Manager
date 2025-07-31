@@ -18,14 +18,17 @@ class SocialButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      child: Text(
-        mainText,
-        style: TextStyle(
-          color: textColor,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w500,
-          fontSize: 15,
-          letterSpacing: 3,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 4),
+        child: Text(
+          mainText,
+          style: TextStyle(
+            color: textColor,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            fontSize: 15,
+            letterSpacing: 3,
+          ),
         ),
       ),
     );

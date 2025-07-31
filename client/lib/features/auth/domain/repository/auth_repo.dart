@@ -15,4 +15,5 @@ abstract class AuthRepository {
   Future<Either> sendOtp(SendOtpRequestParameters otpReq);
   Future<Either> resetPassword(ResetPasswordRequestParameters param);
   Future<Either> verifyOtp(VerifyOtpRequest param);
+  Future<Either> requestOtp(SendOtpRequestParameters otpReq);
 }

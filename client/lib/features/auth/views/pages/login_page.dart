@@ -1,5 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
+import 'package:client/common/widgets/theme_toggle_button.dart';
 import 'package:client/features/auth/data/model/login_request.dart';
 import 'package:client/features/auth/domain/usecases/login_usecase.dart';
 import 'package:client/features/auth/views/pages/forgetpasspages/forget_password_page.dart';
@@ -9,6 +10,7 @@ import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/pages/verfy%20pages/verify_method_page.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
+import 'package:client/features/auth/views/widgets/social_button.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
 import 'package:client/services/service_locator.dart';
@@ -51,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surfaceContainerLowest,
         body: BlocProvider(
           create: (context) => ButtonStateCubit(),
           child: BlocListener<ButtonStateCubit, ButtonState>(
@@ -77,15 +79,22 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomBackButton(),
-            
+                      Row(
+                        children: [
+                          CustomBackButton(isAuth: true),
+                          Spacer(),
+                          ThemeToggleButton(),
+                        ],
+                      ),
                       SizedBox(height: spacing * 0.07),
             
                       Text(
                         'Login your\nAccount',
-                        style: theme.textTheme.headlineLarge?.copyWith(
+                        style: TextStyle(
+                          color: theme.colorScheme.surfaceContainer,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'Poppins',
+                          fontSize: 32
                         ),
                       ),
             
@@ -95,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
             
                       SizedBox(height: spacing * 0.01),
             
-                      _passwordField(),
+                      _passwordField(context),
 
                       SizedBox(height: spacing * 0.015),
 
@@ -118,8 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                       Center(
                         child: Text(
                           'Continue With Accounts',
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            color: theme.colorScheme.surfaceContainer,
                             fontWeight: FontWeight.w500,
+                            fontFamily: 'Poppins'
                           ),
                         ),
                       ),
@@ -156,8 +167,10 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: Text(
               'Forget Password',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
+                color: theme.colorScheme.surfaceContainer,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Poppins'
               ),
             ),
           ),
@@ -173,7 +186,8 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Text(
           'Dont Have An Account?',
-          style: theme.textTheme.bodyMedium?.copyWith(
+          style: TextStyle(
+            color: theme.colorScheme.surfaceContainer,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -188,8 +202,10 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: Text(
             ' Sign Up',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+          style:TextStyle(
+              color: theme.colorScheme.surfaceContainer,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Poppins'
             ),
           ),
         ),
@@ -201,21 +217,20 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SocialButtons(
-          mainIcon: Icons.email,
-          gradColor1: Colors.red,
-          gradColor2: const Color.fromARGB(255, 255, 171, 171),
-          mainColor: Colors.red,
+        SocialButton(
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          mainText: 'Google',
+          textColor: theme.colorScheme.surfaceContainer,
         ),
 
         SizedBox(width: iconspace),
 
-        SocialButtons(
-          mainIcon: Icons.phone_android,
-          gradColor1: theme.colorScheme.onSurface,
-          gradColor2: theme.colorScheme.surface,
-          mainColor: theme.colorScheme.onSurface,
+        SocialButton(
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          mainText: 'Phone',
+          textColor: theme.colorScheme.surfaceContainer,
         ),
+
       ],
     );
   }
@@ -226,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) {
         return CustomButton(
           buttonText: 'Login',
-          backgroundColor: theme.colorScheme.primary,
+          backgroundColor: theme.colorScheme.surfaceContainer,
           onPressed: () {
             context.read<ButtonStateCubit>().excute(
               usecase: sl<LoginUsecase>(),
@@ -241,7 +256,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _passwordField() {
+  Widget _passwordField(BuildContext context) {
+    final theme = Theme.of(context);
     return CustomTextField(
       controller: passwordController,
       hintText: 'Password',
@@ -249,6 +265,7 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: _obscurePassword,
       suffixIconWidget: IconButton(
         icon: Icon(
+          color: theme.colorScheme.surfaceContainer,
           _obscurePassword
               ? Icons.visibility_off_outlined
               : Icons.visibility_outlined,

@@ -77,6 +77,9 @@ class AuthRepositoryImplementation extends AuthRepository{
       (error) => Left(error),
       (data) async {
         Response response = data;
+        final currentUserId = await sl<AuthLocalService>().getUserId();
+        await sl<AuthLocalService>().saveUserId(currentUserId.toString());
+
         return Right(response);
       },
     );
@@ -103,6 +106,15 @@ class AuthRepositoryImplementation extends AuthRepository{
   @override
   Future<Either> verifyOtp(VerifyOtpRequest param) async {
     final result = await sl<AuthApiService>().verifyOtp(param);
+    return result.fold(
+      (error) => Left(error),
+      (data) => Right(data),
+    );
+  }
+  
+  @override
+  Future<Either> requestOtp(SendOtpRequestParameters otpReq) async {
+    final result = await sl<AuthApiService>().requestOtp(otpReq);
     return result.fold(
       (error) => Left(error),
       (data) => Right(data),

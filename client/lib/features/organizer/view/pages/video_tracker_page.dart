@@ -1,34 +1,34 @@
 import 'package:client/common/widgets/custom_header.dart';
-import 'package:client/features/organizer/data/model/books.dart';
+import 'package:client/features/organizer/data/model/video.dart';
 import 'package:client/features/organizer/view/widgets/custom_field.dart';
-import 'package:client/features/organizer/viewmodel/book_tracker_viewmodel.dart';
-import 'package:client/features/organizer/viewmodel/services/books_service.dart';
-import 'package:client/features/organizer/viewmodel/services/pdf_service.dart';
-import 'package:client/features/organizer/viewmodel/services/update_service.dart';
+import 'package:client/features/organizer/viewmodel/video_tracker_viewmodel.dart';
+import 'package:client/features/organizer/viewmodel/services/videos_service.dart';
+import 'package:client/features/organizer/viewmodel/services/update_video_service.dart';
 
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-
-class BookTrackerPage extends StatefulWidget {
-  const BookTrackerPage({super.key});
+class VideoTrackerPage extends StatefulWidget {
+  const VideoTrackerPage({super.key});
 
   @override
-  State<BookTrackerPage> createState() => _BookTrackerPageState();
+  State<VideoTrackerPage> createState() => _VideoTrackerPageState();
 }
 
-class _BookTrackerPageState extends State<BookTrackerPage> {
-  final bookNameController = TextEditingController();
-  final bookSatController = TextEditingController();
-  final bookSubjectController = TextEditingController();
+class _VideoTrackerPageState extends State<VideoTrackerPage> {
+  final videoNameController = TextEditingController();
+  final videoStatusController = TextEditingController();
+  final videoSubjectController = TextEditingController();
+  final videoLinkController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final BookTrackerViewModel viewModel = BookTrackerViewModel();
+  final VideoTrackerViewModel viewModel = VideoTrackerViewModel();
 
   @override
   void dispose() {
-    bookNameController.dispose();
-    bookSatController.dispose();
-    bookSubjectController.dispose();
+    videoNameController.dispose();
+    videoStatusController.dispose();
+    videoSubjectController.dispose();
+    videoLinkController.dispose();
     super.dispose();
   }
 
@@ -44,7 +44,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
         child: Column(
           children: [
             SizedBox(height: spacing*0.03,),
-            CustomHeader(title: 'Book Organizer',),
+            CustomHeader(title: 'Video Organizer',),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -63,41 +63,33 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                 child: Column(
                   children: [
                     CustomField(
-                      hintText: 'Book Name',
-                      controller: bookNameController,
-                      customicon: Icons.abc_outlined,
+                      hintText: 'Video Name',
+                      controller: videoNameController,
+                      customicon: Icons.movie_filter_outlined,
                     ),
 
                     SizedBox(height: spacing * 0.02),
 
                     CustomField(
-                      hintText: 'Book Subject',
-                      controller: bookSubjectController,
+                      hintText: 'Video Subject',
+                      controller: videoSubjectController,
                       customicon: Icons.subject_outlined,
                     ),
 
                     SizedBox(height: spacing * 0.02),
 
                     CustomField(
-                      hintText: 'Book Status',
-                      controller: bookSatController,
+                      hintText: 'Video Status',
+                      controller: videoStatusController,
                       customicon: Icons.star_outline_sharp,
                     ),
 
                     SizedBox(height: spacing * 0.02),
 
-                    ElevatedButton(
-                      onPressed: () async {
-                        await pickPdf();
-                      },
-                      child: Text(selectedPdfPath == null ? 'Attach PDF (Optional)' : 'PDF Attached',
-                        style: TextStyle(
-                          color: theme.colorScheme.secondary,
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(theme.colorScheme.surfaceContainerLow)
-                      ),
+                    CustomField(
+                      hintText: 'Video Link (Optional)',
+                      controller: videoLinkController,
+                      customicon: Icons.link,
                     ),
 
                     SizedBox(height: spacing * 0.02),
@@ -106,19 +98,21 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.add),
-                        label: const Text('Add Book'),
+                        label: const Text('Add Video'),
                         onPressed: () {
                           setState(() {
-                            viewModel.addBook(
-                              name: bookNameController.text,
-                              subject: bookSubjectController.text,
-                              status: bookSatController.text,
+                            viewModel.addVideo(
+                              name: videoNameController.text,
+                              subject: videoSubjectController.text,
+                              status: videoStatusController.text,
+                              videoLink: videoLinkController.text.trim().isEmpty ? null : videoLinkController.text.trim(),
                             );
                           });
 
-                          bookNameController.clear();
-                          bookSatController.clear();
-                          bookSubjectController.clear();
+                          videoNameController.clear();
+                          videoStatusController.clear();
+                          videoSubjectController.clear();
+                          videoLinkController.clear();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.colorScheme.surfaceContainerLow,
@@ -136,12 +130,12 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
             ),
             SizedBox(height: spacing* 0.01,),
             Expanded(
-              child: booksBox.isEmpty
+              child: videosBox.isEmpty
                   ? Center(child: Text('No books added yet.', style: TextStyle(color: theme.colorScheme.surfaceContainerHigh, fontFamily: 'Poppins')))
                   : ListView.builder(
-                      itemCount: booksBox.length,
+                      itemCount: videosBox.length,
                       itemBuilder: (context, index) {
-                        final Books book = booksBox.getAt(index)!;
+                        final Video video = videosBox.getAt(index)!;
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -150,10 +144,10 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                           color: theme.colorScheme.surfaceContainerLow,
                           child: InkWell(
                             onLongPress: () {
-                              showUpdateStatusDialog(
+                              showUpdateVideoDialog(
                                 context: context,
                                 index: index,
-                                book: book,
+                                video: video,
                                 viewModel: viewModel,
                                 onUpdated: () => setState(() {}),
                               );
@@ -167,7 +161,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          book.name,
+                                          video.name,
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -177,7 +171,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                       ),
                                       Chip(
                                         label: Text(
-                                          book.status,
+                                          video.status,
                                           style: TextStyle(color: theme.colorScheme.primaryContainer),
                                         ),
                                         backgroundColor: theme.colorScheme.surfaceContainerLow.withOpacity(0.2),
@@ -186,7 +180,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                   ),
                                   SizedBox(height: spacing * 0.01),
                                   Text(
-                                    'Subject: ${book.subject}',
+                                    'Subject: ${video.subject}',
                                     style: TextStyle(
                                       color: theme.colorScheme.secondary,
                                       fontStyle: FontStyle.italic,
@@ -196,18 +190,27 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      if (book.pdfPath != null)
+                                      if (video.videoLink != null && video.videoLink!.isNotEmpty)
                                         TextButton.icon(
-                                          icon: const Icon(Icons.picture_as_pdf, color: Colors.redAccent, size: 20),
-                                          label: const Text("Open PDF"),
-                                          onPressed: () => OpenFile.open(book.pdfPath),
+                                          icon: const Icon(Icons.link, color: Colors.blueAccent, size: 20),
+                                          label: const Text("Open Link"),
+                                          onPressed: () async {
+                                            final url = Uri.parse(video.videoLink!);
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(url);
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text('Could not launch ${video.videoLink}')),
+                                              );
+                                            }
+                                          },
                                           style: TextButton.styleFrom(
                                             foregroundColor: theme.colorScheme.secondary,
                                           ),
                                         )
                                       else
                                         Text(
-                                          "No PDF attached",
+                                          "No link attached",
                                           style: TextStyle(color: theme.colorScheme.secondary),
                                         ),
                                       Row(
@@ -216,10 +219,10 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                             icon: const Icon(Icons.edit, color: Colors.blueAccent),
                                             tooltip: "Edit",
                                             onPressed: () {
-                                              showUpdateStatusDialog(
+                                              showUpdateVideoDialog(
                                                 context: context,
                                                 index: index,
-                                                book: book,
+                                                video: video,
                                                 viewModel: viewModel,
                                                 onUpdated: () => setState(() {}),
                                               );
@@ -230,7 +233,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                             tooltip: "Delete",
                                             onPressed: () {
                                               setState(() {
-                                                viewModel.deleteBook(index);
+                                                viewModel.deleteVideo(index);
                                               });
                                             },
                                           ),
@@ -252,7 +255,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
               child: TextButton.icon(
                 onPressed: () {
                   setState(() {
-                    booksBox.clear();
+                    videosBox.clear();
                   });
                 }, 
                 label: Text(

@@ -6,12 +6,25 @@ import 'package:path_provider/path_provider.dart';
 import 'interceptors.dart';
 
 class DioClient {
-  late final Dio dio;
-  late final PersistCookieJar cookieJar;
-  final String baseUrl = 'http://192.168.1.15:3000';
+  final Dio dio;
+  final PersistCookieJar cookieJar;
+  final String baseUrl;
 
-  DioClient() {
-    dio = Dio(BaseOptions(
+  DioClient._({
+    required this.dio,
+    required this.cookieJar,
+    required this.baseUrl,
+  });
+
+  static Future<DioClient> create({
+    String baseUrl = 'http://192.168.1.15:3000',
+  }) async {
+
+    final appDocDir  = await getApplicationDocumentsDirectory();
+    final cookiePath = '${appDocDir.path}/.cookies/';
+    final cj         = PersistCookieJar(storage: FileStorage(cookiePath));
+
+    final d = Dio(BaseOptions(
       baseUrl: baseUrl,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -19,12 +32,23 @@ class DioClient {
       responseType: ResponseType.json,
       sendTimeout: const Duration(seconds: 40),
       receiveTimeout: const Duration(seconds: 40),
+      validateStatus: (status) => status != null && status < 500,
     ));
 
-    _initCookieJar();
+    d.interceptors.addAll([
+      LoggerInterceptor(),
+      CookieManager(cj),
+      _AuthInterceptor(cj, baseUrl),
+    ]);
+
+    return DioClient._(
+      dio: d,
+      cookieJar: cj,
+      baseUrl: baseUrl,
+    );
   }
 
-  Future<void> _initCookieJar() async {
+  /* Future<void> _initCookieJar() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final cookiePath = '${appDocDir.path}/.cookies/';
     cookieJar = PersistCookieJar(storage: FileStorage(cookiePath));
@@ -35,8 +59,7 @@ class DioClient {
         CookieManager(cookieJar),
         _AuthInterceptor(cookieJar, baseUrl),
       ]);
-  }
-
+  } */
 
   Future<Response> get(
     String url, {

@@ -1,51 +1,110 @@
 import 'dart:io';
 
 class ChatRoomModel {
-  final String roomName;
   final String roomId;
+  final String roomName;
 
   ChatRoomModel({
-    required this.roomName,
     required this.roomId,
+    required this.roomName,
   });
+
+  factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
+    return ChatRoomModel(
+      roomId: json['id']?.toString() ?? 'unknown-id',
+      roomName: json['title']?.toString() ?? 'Unnamed Room',
+    );
+  }
+}
+
+class UserMessageData {
+  final String id;
+  final String content;
+  final String sender;
+  final DateTime sendAt;
+  final String usersId;
+  final String chatbotRoomsId;
+
+  UserMessageData({
+    required this.id,
+    required this.content,
+    required this.sender,
+    required this.sendAt,
+    required this.usersId,
+    required this.chatbotRoomsId,
+  });
+
+  factory UserMessageData.fromJson(Map<String, dynamic> json) {
+    return UserMessageData(
+      id: json['id'],
+      content: json['content'],
+      sender: json['sender'],
+      sendAt: DateTime.parse(json['send_at']),
+      usersId: json['users_id'],
+      chatbotRoomsId: json['chatbot_rooms_id'],
+    );
+  }
+}
+
+class AIMessageData {
+  final String id;
+  final String content;
+  final String sender;
+  final DateTime sendAt;
+  final String usersId;
+  final String chatbotRoomsId;
+
+  AIMessageData({
+    required this.id,
+    required this.content,
+    required this.sender,
+    required this.sendAt,
+    required this.usersId,
+    required this.chatbotRoomsId,
+  });
+
+  factory AIMessageData.fromJson(Map<String, dynamic> json) {
+    return AIMessageData(
+      id: json['id'],
+      content: json['content'],
+      sender: json['sender'],
+      sendAt: DateTime.parse(json['send_at']),
+      usersId: json['users_id'],
+      chatbotRoomsId: json['chatbot_rooms_id'],
+    );
+  }
 }
 
 class MessageModel {
-  final String messageId;
-  final String content;
-  final String? imageUrl;
-  final String userId;
-  final DateTime createdAt;
+  final UserMessageData? userMessage;
+  final AIMessageData? aIMessage;
 
   MessageModel({
-    required this.messageId,
-    required this.content,
-    this.imageUrl,
-    required this.userId,
-    required this.createdAt,
+    this.userMessage,
+    this.aIMessage,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      messageId: json['messageId'],
-      content: json['content'],
-      imageUrl: json['imageUrl'],
-      userId: json['userId'],
-      createdAt: DateTime.parse(json['createdAt']),
+      userMessage: json['userMessage'] != null
+          ? UserMessageData.fromJson(json['userMessage'])
+          : null,
+      aIMessage: json['AIMessage'] != null
+          ? AIMessageData.fromJson(json['AIMessage'])
+          : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'messageId': messageId,
-      'content': content,
-      'imageUrl': imageUrl,
-      'userId': userId,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
 }
+  extension MessageModelHelpers on MessageModel {
+    bool isFromUser(String currentUserId) {
+      return userMessage != null && userMessage!.usersId == currentUserId;
+    }
 
+    String get content {
+      return userMessage?.content ?? aIMessage?.content ?? '';
+    }
+  }
 
 class CreateChatRoomParams {
   final String roomName;
@@ -56,12 +115,11 @@ class CreateChatRoomParams {
 }
 
 class FetchChatRoomsParams {
-  final String? id;
-  final String? title;
+final String? id;
 
   FetchChatRoomsParams({
     this.id,
-    this.title,
+
   });
 
   Map<String, dynamic> toMap() {
@@ -69,9 +127,7 @@ class FetchChatRoomsParams {
     if (id != null) {
       map['id'] = id;
     }
-    if (title != null) {
-      map['title'] = title;
-    }
+
     return map;
   }
 }
@@ -81,12 +137,14 @@ class SendMessageParams {
   final String? content;
   final File? imageFile;
   final String userId;
+  final String? senderUsername;
 
   SendMessageParams({
     required this.roomId,
     this.content,
     this.imageFile,
     required this.userId,
+    this.senderUsername,
   });
 
   Map<String, dynamic> toMap() {
@@ -94,6 +152,7 @@ class SendMessageParams {
       'content': content,
       'imageUrl': imageFile?.path,
       'userId': userId,
+      'senderUsername': senderUsername,
     };
   }
 }

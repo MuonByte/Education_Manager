@@ -1,34 +1,33 @@
 import 'package:client/common/widgets/custom_header.dart';
 import 'package:client/features/organizer/data/model/books.dart';
+import 'package:client/features/organizer/data/model/project.dart';
 import 'package:client/features/organizer/view/widgets/custom_field.dart';
 import 'package:client/features/organizer/viewmodel/book_tracker_viewmodel.dart';
-import 'package:client/features/organizer/viewmodel/services/books_service.dart';
-import 'package:client/features/organizer/viewmodel/services/pdf_service.dart';
-import 'package:client/features/organizer/viewmodel/services/update_service.dart';
+import 'package:client/features/organizer/viewmodel/project_tracker_viewmodel.dart';
+import 'package:client/features/organizer/viewmodel/services/projects_service.dart';
+import 'package:client/features/organizer/viewmodel/services/update_service.dart'; // Reusing update_service for projects
 
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 
-
-class BookTrackerPage extends StatefulWidget {
-  const BookTrackerPage({super.key});
+class ProjectTrackerPage extends StatefulWidget {
+  const ProjectTrackerPage({super.key});
 
   @override
-  State<BookTrackerPage> createState() => _BookTrackerPageState();
+  State<ProjectTrackerPage> createState() => _ProjectTrackerPageState();
 }
 
-class _BookTrackerPageState extends State<BookTrackerPage> {
-  final bookNameController = TextEditingController();
-  final bookSatController = TextEditingController();
-  final bookSubjectController = TextEditingController();
+class _ProjectTrackerPageState extends State<ProjectTrackerPage> {
+  final projectNameController = TextEditingController();
+  final projectStatusController = TextEditingController();
+  final projectSubjectController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final BookTrackerViewModel viewModel = BookTrackerViewModel();
+  final ProjectTrackerViewModel viewModel = ProjectTrackerViewModel();
 
   @override
   void dispose() {
-    bookNameController.dispose();
-    bookSatController.dispose();
-    bookSubjectController.dispose();
+    projectNameController.dispose();
+    projectStatusController.dispose();
+    projectSubjectController.dispose();
     super.dispose();
   }
 
@@ -44,7 +43,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
         child: Column(
           children: [
             SizedBox(height: spacing*0.03,),
-            CustomHeader(title: 'Book Organizer',),
+            CustomHeader(title: 'Project Organizer',),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -63,41 +62,25 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                 child: Column(
                   children: [
                     CustomField(
-                      hintText: 'Book Name',
-                      controller: bookNameController,
-                      customicon: Icons.abc_outlined,
+                      hintText: 'Project Name',
+                      controller: projectNameController,
+                      customicon: Icons.work_outline,
                     ),
 
                     SizedBox(height: spacing * 0.02),
 
                     CustomField(
-                      hintText: 'Book Subject',
-                      controller: bookSubjectController,
+                      hintText: 'Project Subject',
+                      controller: projectSubjectController,
                       customicon: Icons.subject_outlined,
                     ),
 
                     SizedBox(height: spacing * 0.02),
 
                     CustomField(
-                      hintText: 'Book Status',
-                      controller: bookSatController,
+                      hintText: 'Project Status',
+                      controller: projectStatusController,
                       customicon: Icons.star_outline_sharp,
-                    ),
-
-                    SizedBox(height: spacing * 0.02),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        await pickPdf();
-                      },
-                      child: Text(selectedPdfPath == null ? 'Attach PDF (Optional)' : 'PDF Attached',
-                        style: TextStyle(
-                          color: theme.colorScheme.secondary,
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(theme.colorScheme.surfaceContainerLow)
-                      ),
                     ),
 
                     SizedBox(height: spacing * 0.02),
@@ -106,19 +89,19 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.add),
-                        label: const Text('Add Book'),
+                        label: const Text('Add Project'),
                         onPressed: () {
                           setState(() {
-                            viewModel.addBook(
-                              name: bookNameController.text,
-                              subject: bookSubjectController.text,
-                              status: bookSatController.text,
+                            viewModel.addProject(
+                              name: projectNameController.text,
+                              subject: projectSubjectController.text,
+                              status: projectStatusController.text,
                             );
                           });
 
-                          bookNameController.clear();
-                          bookSatController.clear();
-                          bookSubjectController.clear();
+                          projectNameController.clear();
+                          projectStatusController.clear();
+                          projectSubjectController.clear();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.colorScheme.surfaceContainerLow,
@@ -136,12 +119,12 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
             ),
             SizedBox(height: spacing* 0.01,),
             Expanded(
-              child: booksBox.isEmpty
+              child: projectsBox.isEmpty
                   ? Center(child: Text('No books added yet.', style: TextStyle(color: theme.colorScheme.surfaceContainerHigh, fontFamily: 'Poppins')))
                   : ListView.builder(
-                      itemCount: booksBox.length,
+                      itemCount: projectsBox.length,
                       itemBuilder: (context, index) {
-                        final Books book = booksBox.getAt(index)!;
+                        final Project project = projectsBox.getAt(index)!;
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -153,8 +136,8 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                               showUpdateStatusDialog(
                                 context: context,
                                 index: index,
-                                book: book,
-                                viewModel: viewModel,
+                                book: Books(name: project.name, subject: project.subject, status: project.status, feedback: project.feedback), // Pass a Books object for compatibility
+                                viewModel: BookTrackerViewModel(),
                                 onUpdated: () => setState(() {}),
                               );
                             },
@@ -167,7 +150,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          book.name,
+                                          project.name,
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -177,7 +160,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                       ),
                                       Chip(
                                         label: Text(
-                                          book.status,
+                                          project.status,
                                           style: TextStyle(color: theme.colorScheme.primaryContainer),
                                         ),
                                         backgroundColor: theme.colorScheme.surfaceContainerLow.withOpacity(0.2),
@@ -186,7 +169,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                   ),
                                   SizedBox(height: spacing * 0.01),
                                   Text(
-                                    'Subject: ${book.subject}',
+                                    'Subject: ${project.subject}',
                                     style: TextStyle(
                                       color: theme.colorScheme.secondary,
                                       fontStyle: FontStyle.italic,
@@ -194,48 +177,30 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
                                   ),
                                   SizedBox(height: spacing * 0.01),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      if (book.pdfPath != null)
-                                        TextButton.icon(
-                                          icon: const Icon(Icons.picture_as_pdf, color: Colors.redAccent, size: 20),
-                                          label: const Text("Open PDF"),
-                                          onPressed: () => OpenFile.open(book.pdfPath),
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: theme.colorScheme.secondary,
-                                          ),
-                                        )
-                                      else
-                                        Text(
-                                          "No PDF attached",
-                                          style: TextStyle(color: theme.colorScheme.secondary),
-                                        ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.edit, color: Colors.blueAccent),
-                                            tooltip: "Edit",
-                                            onPressed: () {
-                                              showUpdateStatusDialog(
-                                                context: context,
-                                                index: index,
-                                                book: book,
-                                                viewModel: viewModel,
-                                                onUpdated: () => setState(() {}),
-                                              );
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.remove_circle_outline, color: theme.colorScheme.secondary),
-                                            tooltip: "Delete",
-                                            onPressed: () {
-                                              setState(() {
-                                                viewModel.deleteBook(index);
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      )
+                                      IconButton(
+                                        icon: const Icon(Icons.edit, color: Colors.blueAccent),
+                                        tooltip: "Edit",
+                                        onPressed: () {
+                                          showUpdateStatusDialog(
+                                            context: context,
+                                            index: index,
+                                            book: Books(name: project.name, subject: project.subject, status: project.status, feedback: project.feedback), // Pass a Books object for compatibility
+                                            viewModel: BookTrackerViewModel(),
+                                            onUpdated: () => setState(() {}),
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.remove_circle_outline, color: theme.colorScheme.secondary),
+                                        tooltip: "Delete",
+                                        onPressed: () {
+                                          setState(() {
+                                            viewModel.deleteProject(index);
+                                          });
+                                        },
+                                      ),
                                     ],
                                   )
                                 ],
@@ -252,7 +217,7 @@ class _BookTrackerPageState extends State<BookTrackerPage> {
               child: TextButton.icon(
                 onPressed: () {
                   setState(() {
-                    booksBox.clear();
+                    projectsBox.clear();
                   });
                 }, 
                 label: Text(

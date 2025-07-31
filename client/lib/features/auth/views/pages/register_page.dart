@@ -1,5 +1,6 @@
 import 'package:client/common/bloc/button/button_state.dart';
 import 'package:client/common/bloc/button/button_state_cubit.dart';
+import 'package:client/common/widgets/theme_toggle_button.dart';
 import 'package:client/core/utils/validators.dart';
 import 'package:client/features/auth/data/model/register_request.dart';
 import 'package:client/features/auth/domain/usecases/signup_usecase.dart';
@@ -11,7 +12,8 @@ import 'package:client/common/widgets/custom_back_button.dart';
 import 'package:client/features/auth/views/pages/verfy%20pages/email_verify_page.dart';
 import 'package:client/features/auth/views/widgets/custom_text_field.dart';
 import 'package:client/features/auth/views/widgets/ordivider.dart';
-import 'package:client/features/auth/views/widgets/otp_dialog.dart';
+import 'package:client/features/auth/views/pages/otp_dialog.dart';
+import 'package:client/features/auth/views/widgets/social_button.dart';
 import 'package:client/features/auth/views/widgets/social_buttons.dart';
 import 'package:client/features/profile/views/pages/profile_page.dart';
 import 'package:client/services/service_locator.dart';
@@ -56,26 +58,39 @@ class _RegisterState extends State<Register> {
     return Form(
       key: _formKey,
       child: Scaffold(
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surfaceContainerLowest,
         body: MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => ButtonStateCubit()),
-            BlocProvider(create: (context) => AuthStateCubit(sl(), sl())),
+            BlocProvider(create: (context) => AuthStateCubit(sl(), sl(), sl())),
           ],
-          child: BlocListener<AuthStateCubit, AuthState>(
-            listener: (context, state) {
-              if (state is Authenticated) {
-                showOtpDialog(
-                  context,
-                  _emailController.text,
-                  isEmail: true,
-                );
-              } else if (state is Unauthenticated) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Registration failed. Please try again.")),
-                );
-              }
-            },
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<ButtonStateCubit, ButtonState>(
+                listener: (context, state) {
+                  if (state is ButtonFailureState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Registration failed. Please try again.")),
+                    );
+                  }
+                },
+              ),
+              BlocListener<AuthStateCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is NeedsVerification) {
+                    showOtpDialog(
+                      context,
+                      _emailController.text,
+                      isEmail: true,
+                    );
+                  } else if (state is Unauthenticated) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Authentication failed.")),
+                    );
+                  }
+                },
+              ),
+            ],
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -86,15 +101,22 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomBackButton(),
-
+                      Row(
+                        children: [
+                          CustomBackButton(isAuth: true),
+                          Spacer(),
+                          ThemeToggleButton(),
+                        ],
+                      ),
                       SizedBox(height: spacing * 0.07),
 
                       Text(
                         'Create your\nAccount',
-                        style: theme.textTheme.headlineLarge?.copyWith(
+                        style: TextStyle(
+                          color: theme.colorScheme.surfaceContainer,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'Poppins',
+                          fontSize: 32
                         ),
                       ),
 
@@ -131,7 +153,8 @@ class _RegisterState extends State<Register> {
                       Center(
                         child: Text(
                           'Continue With Accounts',
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            color: theme.colorScheme.surfaceContainer,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -171,6 +194,7 @@ class _RegisterState extends State<Register> {
   }
 
   CustomTextField _passwordField() {
+    final theme = Theme.of(context);
     return CustomTextField(
       controller: _passwordController,
       hintText: 'Password',
@@ -178,6 +202,7 @@ class _RegisterState extends State<Register> {
       obscureText: _obscurePassword,
       suffixIconWidget: IconButton(
         icon: Icon(
+          color: theme.colorScheme.surfaceContainer,
           _obscurePassword
               ? Icons.visibility_off_outlined
               : Icons.visibility_outlined,
@@ -196,7 +221,8 @@ class _RegisterState extends State<Register> {
       children: [
         Text(
           'Already Have An Account?',
-          style: theme.textTheme.bodyMedium?.copyWith(
+          style: TextStyle(
+            color: theme.colorScheme.surfaceContainer,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -211,8 +237,10 @@ class _RegisterState extends State<Register> {
           },
           child: Text(
             ' Sign In',
-            style: theme.textTheme.bodyLarge?.copyWith(
+            style: TextStyle(
+            color: theme.colorScheme.surfaceContainer,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins'
             ),
           ),
         ),
@@ -224,24 +252,20 @@ class _RegisterState extends State<Register> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SocialButtons(
-          mainIcon: Icons.email,
-          gradColor1: Colors.red,
-          gradColor2: const Color.fromARGB(
-            255,255,171,171,
-          ),
-          mainColor: Colors.red,
+        SocialButton(
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          mainText: 'Google',
+          textColor: theme.colorScheme.surfaceContainer,
         ),
 
         SizedBox(width: iconspace),
 
-        SocialButtons(
-          mainIcon: Icons.phone_android_rounded,
-          gradColor1: theme.colorScheme.onSurface,
-          gradColor2: theme.colorScheme.surface,
-          mainColor: theme.colorScheme.onSurface,
+        SocialButton(
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          mainText: 'Phone',
+          textColor: theme.colorScheme.surfaceContainer,
         ),
-      
+
       ],
     );
   }
@@ -252,7 +276,7 @@ class _RegisterState extends State<Register> {
       builder: (context) {
         return CustomButton(
           buttonText: 'Register',
-          backgroundColor: theme.colorScheme.primary,
+          backgroundColor: theme.colorScheme.surfaceContainer,
           onPressed: () {
             if (_formKey.currentState != null && _formKey.currentState!.validate()) {
               context.read<AuthStateCubit>().signup(

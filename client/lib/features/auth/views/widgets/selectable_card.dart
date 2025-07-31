@@ -18,6 +18,7 @@ class SelectableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -30,7 +31,7 @@ class SelectableCard extends StatelessWidget {
               : Border.all(color: Colors.transparent),
         ),
         child: PhysicalModel(
-          color: Colors.white,
+          color: theme.colorScheme.surfaceContainer,
           shadowColor: Colors.black.withOpacity(0.3),
           elevation: 6,
           borderRadius: BorderRadius.circular(10),
@@ -38,16 +39,16 @@ class SelectableCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: theme.colorScheme.surfaceContainerHighest,
             ),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: const Color(0xFFECECEC),
+                  backgroundColor: theme.colorScheme.surfaceContainerLow,
                   child: Icon(
                     icon,
-                    color: Colors.black,
+                    color: theme.colorScheme.surfaceContainer,
                     size: 28,
                   ),
                 ),
@@ -57,17 +58,18 @@ class SelectableCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
+                        color: theme.colorScheme.surfaceContainer
                       ),
                     ),
                     Text(
                       subtitle,
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        color: Colors.grey.shade600,
+                        color: theme.colorScheme.surfaceContainer,
                         fontSize: 14,
                       ),
                     ),

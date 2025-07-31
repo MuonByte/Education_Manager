@@ -159,11 +159,13 @@ class _ChatRoomsPageState extends State<ChatRoomsPage> {
             ),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               final name = _roomNameController.text.trim();
               if (name.isNotEmpty) {
                 context.read<ChatRoomViewModel>().createRoom(name);
                 _roomNameController.clear();
+                await Future.delayed(const Duration(seconds: 1));
+                context.read<ChatRoomViewModel>().getRooms();
               }
             },
             child: Icon(

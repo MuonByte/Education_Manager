@@ -31,10 +31,7 @@ class ChatRepositoryImpl extends ChatRepository {
     return result.fold(
       (err) => Left(err),
       (list) {
-        final rooms = list.map((e) => ChatRoomModel(
-          roomName: e['roomName'],
-          roomId: e['roomId'],
-        )).toList();
+        final rooms = list.map((e) => ChatRoomModel.fromJson(e)).toList();
         return Right(rooms);
       },
     );
@@ -46,9 +43,12 @@ class ChatRepositoryImpl extends ChatRepository {
       final messages = await _chatApiService.fetchMessages(params.roomId);
       return Right(messages);
     } on DioException catch (e) {
-      return Left(e.response?.data['message'] ?? 'Failed to fetch messages');
+      return Left(e.message ?? 'Failed to fetch messages');
+    } on FormatException catch (e) {
+      return Left('Bad response format: ${e.message}');
     }
   }
+
 
   @override
   Future<Either<String, MessageModel>> sendMessage(SendMessageParams params) async {

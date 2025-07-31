@@ -25,3 +25,13 @@ String maskEmail(String email) {
 
   return '$maskedUsername@$domain';
 }
+
+bool getIsVerified(Map<String, dynamic> data) {
+  final isVerifiedValue = data['isVerified'];
+  if (isVerifiedValue is int) {
+    return isVerifiedValue == 1;
+  } else if (isVerifiedValue is bool) {
+    return isVerifiedValue;
+  }
+  return false; 
+}

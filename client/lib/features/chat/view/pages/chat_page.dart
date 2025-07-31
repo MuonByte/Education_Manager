@@ -1,9 +1,12 @@
+import 'package:client/features/auth/data/source/auth_local_service.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state.dart';
 import 'package:client/features/auth/viewmodel/bloc/auth/auth_state_cubit.dart';
 import 'package:client/features/chat/data/model/chat_parameters.dart';
 import 'package:client/common/widgets/custom_back_button.dart';
+import 'package:client/features/chat/view/widgets/message_pair_bubble.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_cubit.dart';
 import 'package:client/features/chat/viewmodel/bloc/messages/message_state.dart';
+import 'package:client/services/service_locator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,40 +35,67 @@ class _ChatPageState extends State<ChatPage> {
   });
   }
 
-  void _sendMessage() {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-
-    final authState = context.read<AuthStateCubit>().state;
-    if (authState is Authenticated) {
-      final userId = authState.user.userId;
-
-      context.read<MessagesCubit>().sendMessage(
-        SendMessageParams(
-          roomId: widget.room.roomId,
-          content: text,
-          userId: userId!,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(child: _buildChatSection()),
+            _buildInputField(),
+          ],
         ),
-      );
-
-      _controller.clear();
-    }
+      ),
+    );
   }
 
-  void _sendImageMessage(File imageFile) {
+  
+  void _sendMessage() {
+  final text = _controller.text.trim();
+  if (text.isEmpty) return;
+
+  String? userId = sl<AuthLocalService>().getUserIdSync();;
+  //final authState = context.read<AuthStateCubit>().state;
+
+  context.read<MessagesCubit>().sendMessage(
+    SendMessageParams(
+      roomId: widget.room.roomId,
+      content: text,
+      userId: userId.toString(),
+    ),
+  );
+
+  _controller.clear();
+}
+
+
+/*   void _sendImageMessage(File imageFile) {
     final authState = context.read<AuthStateCubit>().state;
+    final currentUserId = sl<AuthLocalService>().getUserIdSync();
+    print('$currentUserId');
     if (authState is Authenticated) {
       final userId = authState.user.userId;
-
+      if (userId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not authenticated. Cannot send image.')),
+        );
+        return;
+      }
       context.read<MessagesCubit>().sendMessage(
         SendMessageParams(
           roomId: widget.room.roomId,
           imageFile: imageFile,
-          userId: userId!,
+          userId: userId,
         ),
       );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You must be logged in to send images.')),
+      );
     }
-  }
+  } */
 
 
   void _scrollToBottom() {
@@ -80,24 +110,6 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(child: _buildChatSection()),
-              _buildInputField(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildHeader() {
     return Container(
@@ -131,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ListTile(
+/*                         ListTile(
                           leading: const Icon(Icons.photo),
                           title: const Text('Send Photo'),
                           onTap: () async {
@@ -152,7 +164,7 @@ class _ChatPageState extends State<ChatPage> {
                             }
                             Navigator.pop(context);
                           },
-                        ),
+                        ), */
                       ],
                     ),
                   );
@@ -166,38 +178,50 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildChatSection() {
-    return BlocConsumer<MessagesCubit, MessagesState>(
-      listener: (context, state) {
-        if (state is MessagesLoaded) _scrollToBottom();
-      },
-      builder: (context, state) {
-        final authState = context.read<AuthStateCubit>().state;
-        final currentUserId = authState is Authenticated ? authState.user.userId : null;
-        if (state is MessagesLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is MessagesLoaded) {
-          final messages = state.messages;
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            itemCount: messages.length,
-            itemBuilder: (context, i) {
-              final msg = messages[i];
-              final isUser = msg.userId == currentUserId;
+Widget _buildChatSection() {
+  return BlocConsumer<MessagesCubit, MessagesState>(
+    listener: (context, state) {
+      if (state is MessagesLoaded) {
+        _scrollToBottom();
+      }
+    },
+    builder: (context, state) {
+      if (state is MessagesLoading) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-              return isUser
-                ? _UserSection(text: msg.content)
-                : _AISection(text: msg.content);
-            }
-          );
-        } else if (state is MessagesError) {
-          return Center(child: Text(state.error));
+      if (state is MessagesLoaded) {
+        final messages = state.messages;
+
+        if (messages.isEmpty) {
+          return const Center(child: Text("No messages yet. Say hi!"));
         }
-        return const SizedBox.shrink();
-      },
-    );
-  }
+
+        return ListView.builder(
+          controller: _scrollController,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          itemCount: messages.length,
+          itemBuilder: (context, i) {
+            final msg = messages[i];
+            return MessagePairBubble(
+              userMessage: msg.userMessage,
+              aiMessage: msg.aIMessage,
+            );
+          },
+        );
+      }
+
+      if (state is MessagesError) {
+        return Center(child: Text(state.error));
+      }
+
+      return const SizedBox.shrink();
+    },
+  );
+}
+
+
+
 
   Widget _buildInputField() {
     return Container(
@@ -218,7 +242,7 @@ class _ChatPageState extends State<ChatPage> {
                 border: InputBorder.none,
                 hintStyle: TextStyle(fontFamily: 'Poppins'),
               ),
-              onSubmitted: (_) => _sendMessage(),
+              onTap: () => _sendMessage(),
             ),
           ),
           GestureDetector(
@@ -230,65 +254,4 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
-
-class _UserSection extends StatelessWidget {
-  final String text;
-  const _UserSection({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.person_2_rounded, size: 30),
-          const SizedBox(width: 12),
-          Expanded(child: Text(text)),
-          const Icon(Icons.edit, size: 20, color: Colors.grey),
-        ],
-      ),
-    );
-  }
-}
-
-class _AISection extends StatelessWidget {
-  final String text;
-  const _AISection({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Image.asset('assets/icon/app_icon.png', width: 55),
-              const SizedBox(width: 8),
-              const Spacer(),
-              const Icon(Icons.copy, size: 20),
-              const SizedBox(width: 12),
-              const Icon(Icons.share, size: 20),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(text),
-        ],
-      ),
-    );
-  }
-  
-}
-
 
